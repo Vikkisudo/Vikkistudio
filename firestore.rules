@@ -1,0 +1,215 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {uid}
+    // Fields:
+    //   - uid: string (required)
+    //   - phone: string (required)
+    //   - email: string (required)
+    //   - name: string (required)
+    //   - password: string (optional)
+    //   - dob: string (optional)
+    //   - tier: number (optional)
+    //   - balance: number (required)
+    //   - accountNumber: string (required)
+    //   - invitationCode: string (required)
+    //   - pin: string (optional)
+    //   - authorizedDevices: list (optional)
+    //   - referralCode: string (optional)
+    //   - profileImage: string (optional)
+    //   - virtualCard: map (optional)
+    //   - referralsCount: number (optional)
+    //   - createdAt: timestamp (optional)
+    //   - lastSpentReset: timestamp (optional)
+    //   - investments: list (optional)
+    //
+    // Collection: transactions
+    // Document ID: {txId}
+    // Fields:
+    //   - senderAccount: string (required)
+    //   - senderUid: string (required)
+    //   - receiverAccount: string (required)
+    //   - receiverUid: string (required)
+    //   - amount: number (required)
+    //   - status: string (required, enum: ['success', 'pending', 'failed'])
+    //   - type: string (required)
+    //   - name: string (required)
+    //   - createdAt: timestamp (required)
+    //   - details: map (optional)
+    //
+    // Collection: user_investments
+    // Document ID: {id}
+    // Fields:
+    //   - uid: string (required)
+    //   - planId: string (required)
+    //   - planName: string (required)
+    //   - amount: number (required)
+    //   - status: string (required)
+    //   - createdAt: timestamp (required)
+    //   - returns: number (optional)
+    //   - nextPayout: string (optional)
+    //
+    // Collection: recurring_payments
+    // Document ID: {id}
+    // Fields:
+    //   - uid: string (required)
+    //   - name: string (required)
+    //   - amount: number (required)
+    //   - date: string (required)
+    //   - category: string (required)
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // Collection: testimonials
+    // Document ID: {id}
+    // Fields:
+    //   - id: string (required)
+    //   - uid: string (required)
+    //   - name: string (required)
+    //   - text: string (required)
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'admin' ||
+          (request.auth.token.email == "joelvictory62@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidUser(data) {
+      return hasRequiredFields(['uid', 'phone', 'email', 'name', 'balance', 'accountNumber', 'invitationCode']) &&
+             data.uid is string && data.uid.size() > 0 &&
+             data.phone is string && data.phone.size() >= 10 &&
+             data.email is string && data.email.matches("(?i)^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$") &&
+             data.name is string && data.name.size() > 0 &&
+             data.balance is number &&
+             data.accountNumber is string && data.accountNumber.size() >= 8 &&
+             data.invitationCode is string && data.invitationCode.size() > 0 &&
+             (!('dailyLimit' in data) || data.dailyLimit is number) &&
+             (!('monthlyLimit' in data) || data.monthlyLimit is number) &&
+             (!('dailySpent' in data) || data.dailySpent is number) &&
+             (!('monthlySpent' in data) || data.monthlySpent is number) &&
+             (!('lastSpentReset' in data) || data.lastSpentReset is timestamp) &&
+             (!('investments' in data) || data.investments is list);
+    }
+
+    function isValidTransaction(data) {
+      return hasRequiredFields(['senderAccount', 'receiverAccount', 'amount', 'status', 'type', 'name', 'createdAt']) &&
+             data.senderAccount is string &&
+             data.receiverAccount is string &&
+             data.amount is number && data.amount > 0 &&
+             data.status in ['success', 'pending', 'failed'] &&
+             data.type is string &&
+             data.name is string && data.name.size() > 0 &&
+             data.createdAt is timestamp &&
+             (data.get('senderUid', null) == null || data.senderUid is string) &&
+             (data.get('receiverUid', null) == null || data.receiverUid is string);
+    }
+
+    function isValidTestimonial(data) {
+      return hasRequiredFields(['id', 'uid', 'name', 'text', 'createdAt']) &&
+             data.id is string &&
+             data.uid is string &&
+             data.name is string &&
+             data.text is string && data.text.size() > 0 && data.text.size() < 1000 &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidUserInvestment(data) {
+      return hasRequiredFields(['uid', 'planTitle', 'amount', 'status', 'createdAt']) &&
+             data.uid is string &&
+             data.planTitle is string &&
+             data.amount is number && data.amount > 0 &&
+             data.status is string &&
+             data.createdAt is timestamp &&
+             (!('roi' in data) || data.roi is string) &&
+             (!('risk' in data) || data.risk is string) &&
+             (!('color' in data) || data.color is string);
+    }
+
+    function isValidRecurringPayment(data) {
+      return hasRequiredFields(['uid', 'name', 'amount', 'date', 'category', 'createdAt']) &&
+             data.uid is string &&
+             data.name is string && data.name.size() > 0 &&
+             data.amount is number && data.amount > 0 &&
+             data.date is string &&
+             data.category is string &&
+             data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid) && isValidUser(request.resource.data);
+      allow update: if (isOwner(uid) && isValidUser(request.resource.data)) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /public_profiles/{uid} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOwner(uid) && hasOnlyAllowedFields(['uid', 'name', 'accountNumber', 'phone']);
+      allow delete: if isAdmin();
+    }
+
+    match /transactions/{txId} {
+      allow read: if isAuthenticated() && (
+        resource.data.senderUid == request.auth.uid ||
+        resource.data.receiverUid == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated() && isValidTransaction(request.resource.data) && 
+                    request.resource.data.senderUid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /testimonials/{id} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isValidTestimonial(request.resource.data) && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+    }
+
+    match /user_investments/{id} {
+      allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidUserInvestment(request.resource.data) && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /recurring_payments/{id} {
+      allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidRecurringPayment(request.resource.data) && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuthenticated() && isValidRecurringPayment(request.resource.data) && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+    }
+  }
+}

@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-primary: "Inter", sans-serif;
+  --font-secondary: "Poppins", sans-serif;
+}
+
+:root {
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Poppins', sans-serif;
+
+  /* DEFAULT (LIGHT MODE) */
+  --text-primary: #020617; /* slate-950 */
+  --text-secondary: #1E293B; /* slate-800 */
+  --text-muted: #475569; /* slate-600 */
+  --bg-main: #F8FAFC; /* slate-50 */
+  --bg-card: #FFFFFF;
+  --border-main: #CBD5E1; /* slate-300 */
+
+  /* BRAND COLORS */
+  --purple: #6C2BD9;
+  --green: #16A34A;
+  --yellow: #EAB308;
+}
+
+.dark {
+  --text-primary: #FFFFFF;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --bg-main: #0B0F19;
+  --bg-card: #121826;
+  --border-main: #1E293B;
+}
+
+/* ===============================
+   3. GLOBAL TEXT SETTINGS
+   =============================== */
+body {
+  font-family: var(--font-primary);
+  font-weight: 500; /* More bold in light mode */
+  background: var(--bg-main);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  font-weight: 400; /* Normal weight in dark mode */
+}
+
+/* ===============================
+   4. HEADINGS (CLEAR & BOLD)
+   =============================== */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+h1 { font-size: 28px; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+
+/* ===============================
+   5. PARAGRAPH TEXT
+   =============================== */
+p {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ===============================
+   6. INPUT FIELDS (VERY IMPORTANT)
+   =============================== */
+input, select {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  padding: 12px;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, select:focus {
+  border-color: var(--purple);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ===============================
+   7. LABELS
+   =============================== */
+label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Contrast Overrides for Light Mode */
+.text-gray-100, .text-zinc-100, .text-slate-100 {
+  color: #94A3B8; /* slate-400 */
+}
+
+.text-gray-200, .text-zinc-200, .text-slate-200 {
+  color: #64748B; /* slate-500 */
+}
+
+.text-gray-300, .text-zinc-300, .text-slate-300 {
+  color: #475569; /* slate-600 */
+}
+
+.text-gray-400, .text-zinc-400, .text-slate-400 {
+  color: #334155; /* slate-700 */
+}
+
+.text-gray-500, .text-zinc-500, .text-slate-500 {
+  color: #1E293B; /* slate-800 */
+}
+
+.text-gray-600, .text-zinc-600, .text-slate-600 {
+  color: #0F172A; /* slate-900 */
+}
+
+/* Also override some common brand colors that might be too light in light mode */
+.text-blue-600 {
+  color: #1D4ED8; /* blue-700 */
+}
+.text-emerald-600 {
+  color: #047857; /* emerald-700 */
+}
+.text-purple-600 {
+  color: #6D28D9; /* purple-700 */
+}
+.text-indigo-600 {
+  color: #4338CA; /* indigo-700 */
+}
+
+.text-slate-900, .text-gray-900, .text-zinc-900 {
+  color: var(--text-primary);
+}
+
+.text-slate-800, .text-gray-800, .text-zinc-800 {
+  color: var(--text-secondary);
+}
+
+.dark .text-gray-300, .dark .text-zinc-300, .dark .text-slate-300 {
+  color: #D1D5DB; /* gray-300 */
+}
+
+.dark .text-gray-400, .dark .text-zinc-400, .dark .text-slate-400 {
+  color: #94A3B8; /* slate-400 */
+}
+
+.dark .text-gray-500, .dark .text-zinc-500, .dark .text-slate-500 {
+  color: #64748B; /* slate-500 */
+}
+
+.dark .text-gray-600, .dark .text-zinc-600, .dark .text-slate-600 {
+  color: #475569; /* slate-600 */
+}
+
+/* ===============================
+   8. BUTTON TEXT
+   =============================== */
+button {
+  font-family: var(--font-secondary);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+/* ===============================
+   9. CARD TEXT (FOR DARK UI)
+   =============================== */
+.card {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+/* ===============================
+   10. HIGHLIGHT TEXT (IMPORTANT VALUES)
+   =============================== */
+.text-highlight {
+  font-weight: 600;
+  color: var(--green);
+}
+
+/* ===============================
+   11. ERROR TEXT
+   =============================== */
+.text-error {
+  color: #EF4444;
+  font-size: 13px;
+}
+
+/* ===============================
+   12. SUCCESS TEXT
+   =============================== */
+.text-success {
+  color: #22C55E;
+}

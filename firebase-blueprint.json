@@ -1,0 +1,145 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a user in the SageVault application.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique identifier for the user." },
+        "phone": { "type": "string", "description": "The user's phone number." },
+        "email": { "type": "string", "description": "The user's email address." },
+        "name": { "type": "string", "description": "The user's full name." },
+        "password": { "type": "string", "description": "The user's password (hashed or stored securely)." },
+        "dob": { "type": "string", "description": "The user's date of birth." },
+        "tier": { "type": "number", "description": "The user's account tier." },
+        "balance": { "type": "number", "description": "The user's current account balance." },
+        "accountNumber": { "type": "string", "description": "The user's unique account number." },
+        "invitationCode": { "type": "string", "description": "The user's unique invitation code." },
+        "pin": { "type": "string", "description": "The user's 4-digit transaction PIN." },
+        "authorizedDevices": { "type": "array", "items": { "type": "string" }, "description": "A list of authorized device IDs." },
+        "referralCode": { "type": "string", "description": "The referral code used by the user." },
+        "profileImage": { "type": "string", "description": "The URL of the user's profile image." },
+        "virtualCard": {
+          "type": "object",
+          "properties": {
+            "cardNumber": { "type": "string" },
+            "expiry": { "type": "string" },
+            "cvv": { "type": "string" },
+            "cardName": { "type": "string" },
+            "cardType": { "type": "string" },
+            "isFrozen": { "type": "boolean" },
+            "cardBalance": { "type": "number" }
+          }
+        },
+        "referralsCount": { "type": "number", "description": "The number of users referred by this user." },
+        "role": { "type": "string", "description": "The role of the user (e.g., 'admin', 'user')." },
+        "dailyLimit": { "type": "number", "description": "The user's daily transaction limit." },
+        "monthlyLimit": { "type": "number", "description": "The user's monthly transaction limit." },
+        "dailySpent": { "type": "number", "description": "The amount spent by the user today." },
+        "monthlySpent": { "type": "number", "description": "The amount spent by the user this month." },
+        "lastSpentReset": { "type": "string", "format": "date-time", "description": "The last time the spent amounts were reset." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the user account was created." }
+      },
+      "required": ["uid", "phone", "email", "name", "balance", "accountNumber", "invitationCode"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Represents a financial transaction in the SageVault application.",
+      "type": "object",
+      "properties": {
+        "senderAccount": { "type": "string", "description": "The account number of the sender." },
+        "senderUid": { "type": "string", "description": "The UID of the sender." },
+        "receiverAccount": { "type": "string", "description": "The account number of the receiver." },
+        "receiverUid": { "type": "string", "description": "The UID of the receiver." },
+        "amount": { "type": "number", "description": "The amount of the transaction." },
+        "status": { "type": "string", "enum": ["success", "pending", "failed"], "description": "The status of the transaction." },
+        "type": { "type": "string", "description": "The type of the transaction (e.g., 'transfer', 'card', 'airtime')." },
+        "name": { "type": "string", "description": "A descriptive name for the transaction." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the transaction occurred." },
+        "details": { "type": "object", "description": "Additional details about the transaction." }
+      },
+      "required": ["senderAccount", "receiverAccount", "amount", "status", "type", "name", "createdAt"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Represents a user testimonial in the SageVault application.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique identifier for the testimonial." },
+        "uid": { "type": "string", "description": "The UID of the user who posted the testimonial." },
+        "name": { "type": "string", "description": "The name of the user who posted the testimonial." },
+        "text": { "type": "string", "description": "The content of the testimonial." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the testimonial was created." }
+      },
+      "required": ["id", "uid", "name", "text", "createdAt"]
+    },
+    "PublicProfile": {
+      "title": "PublicProfile",
+      "description": "Represents a public profile of a user, containing non-sensitive information.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique identifier for the user." },
+        "name": { "type": "string", "description": "The user's full name." },
+        "accountNumber": { "type": "string", "description": "The user's unique account number." },
+        "phone": { "type": "string", "description": "The user's phone number." }
+      },
+      "required": ["uid", "name", "accountNumber"]
+    },
+    "UserInvestment": {
+      "title": "UserInvestment",
+      "description": "Represents an investment made by a user.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The UID of the user who made the investment." },
+        "planTitle": { "type": "string", "description": "The title of the investment plan." },
+        "amount": { "type": "number", "description": "The amount invested." },
+        "status": { "type": "string", "description": "The status of the investment." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the investment was made." },
+        "roi": { "type": "string", "description": "The expected return on investment." },
+        "risk": { "type": "string", "description": "The risk level of the investment." },
+        "color": { "type": "string", "description": "The color theme for the investment." }
+      },
+      "required": ["uid", "planTitle", "amount", "status", "createdAt"]
+    },
+    "RecurringPayment": {
+      "title": "RecurringPayment",
+      "description": "Represents a recurring payment set up by a user.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The UID of the user who set up the payment." },
+        "name": { "type": "string", "description": "The name of the service or payment." },
+        "amount": { "type": "number", "description": "The amount of the recurring payment." },
+        "date": { "type": "string", "description": "The next payment date." },
+        "category": { "type": "string", "description": "The category of the payment (e.g., 'tv', 'music')." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the recurring payment was created." }
+      },
+      "required": ["uid", "name", "amount", "date", "category", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "Collection of user profiles."
+    },
+    "/public_profiles/{uid}": {
+      "schema": "PublicProfile",
+      "description": "Collection of public user profiles for search and resolution."
+    },
+    "/transactions/{txId}": {
+      "schema": "Transaction",
+      "description": "Collection of all financial transactions."
+    },
+    "/testimonials/{id}": {
+      "schema": "Testimonial",
+      "description": "Collection of user testimonials."
+    },
+    "/user_investments/{id}": {
+      "schema": "UserInvestment",
+      "description": "Collection of user investments."
+    },
+    "/recurring_payments/{id}": {
+      "schema": "RecurringPayment",
+      "description": "Collection of user recurring payments."
+    }
+  }
+}

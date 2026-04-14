@@ -6976,14 +6976,18 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
               exit={{ y: "100%" }}
               className="relative bg-white dark:bg-zinc-900 w-full max-w-md rounded-t-[3rem] sm:rounded-[3rem] p-10 shadow-2xl overflow-hidden"
             >
-              <div className="flex justify-between items-center mb-10">
+              <div className="flex justify-between items-center mb-8">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-amber-50 dark:bg-amber-900/20 rounded-2xl flex items-center justify-center shadow-inner">
                     <Trophy className="w-7 h-7 text-amber-600" />
                   </div>
                   <div>
                     <h3 className="text-2xl font-black tracking-tight leading-none">Betting</h3>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">Fund your wallet</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Fund your wallet</span>
+                      <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                      <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Balance: {symbol}{convert(user.balance)}</span>
+                    </div>
                   </div>
                 </div>
                 <button 
@@ -6994,33 +6998,40 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 </button>
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-8 max-h-[60vh] overflow-y-auto pr-2 scrollbar-hide">
                 <div>
                   <div className="flex justify-between items-end mb-4 px-1">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Select Platform</label>
                     {bettingPlatform && (
-                      <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Selected: {bettingPlatform}</span>
+                      <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> {bettingPlatform}
+                      </span>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     {[
-                      { name: 'SportyBet', color: 'bg-red-500' },
-                      { name: 'Bet9ja', color: 'bg-green-600' },
-                      { name: '1xBet', color: 'bg-blue-600' },
-                      { name: 'BetKing', color: 'bg-blue-900' },
-                      { name: 'MSport', color: 'bg-yellow-500' },
-                      { name: 'Merrybet', color: 'bg-orange-600' }
+                      { name: 'SportyBet', popular: true },
+                      { name: 'Bet9ja', popular: true },
+                      { name: '1xBet', popular: false },
+                      { name: 'BetKing', popular: false },
+                      { name: 'MSport', popular: false },
+                      { name: 'Merrybet', popular: false }
                     ].map((p) => (
                       <button
                         key={p.name}
                         onClick={() => setBettingPlatform(p.name)}
-                        className={`p-4 rounded-3xl transition-all border-2 flex items-center gap-4 text-left ${
+                        className={`p-3 rounded-3xl transition-all border-2 flex flex-col items-center gap-2 text-center relative overflow-hidden ${
                           bettingPlatform === p.name 
-                            ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-500 shadow-md' 
+                            ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-500 shadow-lg shadow-amber-500/10' 
                             : 'bg-gray-50 dark:bg-zinc-800/50 border-transparent hover:border-gray-200 dark:hover:border-zinc-700 text-gray-500'
                         }`}
                       >
-                        <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-sm bg-white p-1.5 flex-shrink-0 border border-gray-100">
+                        {p.popular && (
+                          <div className="absolute top-0 right-0 bg-amber-500 text-white text-[7px] font-black px-2 py-1 rounded-bl-xl uppercase tracking-widest">
+                            Popular
+                          </div>
+                        )}
+                        <div className={`w-12 h-12 rounded-2xl overflow-hidden shadow-sm bg-white p-1.5 flex-shrink-0 border transition-transform ${bettingPlatform === p.name ? 'scale-110 border-amber-200' : 'border-gray-100'}`}>
                           <img 
                             src={`https://picsum.photos/seed/${p.name.toLowerCase()}/100/100`} 
                             alt={p.name}
@@ -7028,7 +7039,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                             referrerPolicy="no-referrer"
                           />
                         </div>
-                        <span className={`text-xs font-black uppercase tracking-tight ${bettingPlatform === p.name ? 'text-amber-700 dark:text-amber-400' : ''}`}>
+                        <span className={`text-[10px] font-black uppercase tracking-tight ${bettingPlatform === p.name ? 'text-amber-700 dark:text-amber-400' : ''}`}>
                           {p.name}
                         </span>
                       </button>
@@ -7036,7 +7047,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                   </div>
                 </div>
 
-                <div className="space-y-5">
+                <div className="space-y-6">
                   <div className="relative">
                     <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2.5 ml-1">User ID / Account ID</label>
                     <div className="relative group">
@@ -7055,7 +7066,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
 
                   <div className="relative">
                     <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2.5 ml-1">Amount to Fund</label>
-                    <div className="flex items-center bg-gray-50 dark:bg-zinc-800 border-2 border-transparent rounded-[2rem] focus-within:bg-white dark:focus-within:bg-zinc-900 focus-within:border-amber-500 transition-all overflow-hidden group">
+                    <div className="flex items-center bg-gray-50 dark:bg-zinc-800 border-2 border-transparent rounded-[2rem] focus-within:bg-white dark:focus-within:bg-zinc-900 focus-within:border-amber-500 transition-all overflow-hidden group mb-4">
                       <div className="ml-5 w-10 h-10 bg-white dark:bg-zinc-900 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-zinc-800 group-focus-within:border-amber-500 transition-colors">
                         <span className="font-black text-emerald-500 group-focus-within:text-amber-500 transition-colors">₦</span>
                       </div>
@@ -7066,6 +7077,22 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                         placeholder="0.00"
                         className="w-full bg-transparent border-none py-5 pl-3 pr-6 font-black text-xl outline-none"
                       />
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 px-1">
+                      {[500, 1000, 2000, 5000].map((amt) => (
+                        <button
+                          key={amt}
+                          onClick={() => setBettingAmount(amt.toString())}
+                          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                            bettingAmount === amt.toString()
+                              ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20'
+                              : 'bg-gray-100 dark:bg-zinc-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-zinc-700'
+                          }`}
+                        >
+                          ₦{amt.toLocaleString()}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -7080,69 +7107,75 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                   </motion.div>
                 )}
 
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={isBettingProcessing || !bettingPlatform || !bettingUserId || !bettingAmount}
-                  onClick={async () => {
-                    const amt = parseFloat(bettingAmount);
-                    if (amt > user.balance) {
-                      setBettingError('Insufficient Balance');
-                      return;
-                    }
-                    if (amt < 100) {
-                      setBettingError('Min amount is 100');
-                      return;
-                    }
-                    
-                    setIsBettingProcessing(true);
-                    setBettingError('');
-                    
-                    // Simulate processing
-                    await new Promise(r => setTimeout(r, 2000));
-                    
-                    const updatedUser = { ...user, balance: user.balance - amt };
-                    const transaction = {
-                      type: 'betting',
-                      title: `${bettingPlatform} Top-up`,
-                      amount: -amt,
-                      icon: (
-                        <div className="w-full h-full p-1 overflow-hidden rounded-2xl">
-                          <img 
-                            src={`https://picsum.photos/seed/${bettingPlatform.toLowerCase()}/80/80`} 
-                            alt={bettingPlatform}
-                            className="w-full h-full object-cover rounded-lg"
-                            referrerPolicy="no-referrer"
-                          />
-                        </div>
-                      ),
-                      date: 'Just now',
-                      ref: `BET-${Math.random().toString(36).substring(7).toUpperCase()}`,
-                      bettingPlatform,
-                      bettingUserId
-                    };
-                    
-                    setLastTransaction(transaction);
-                    onUpdateUser(updatedUser);
-                    
-                    setIsBettingProcessing(false);
-                    setBettingModalOpen(false);
-                    setReceiptModalOpen(true);
-                    setBettingPlatform('');
-                    setBettingUserId('');
-                    setBettingAmount('');
-                  }}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-amber-500/25 disabled:opacity-50 disabled:grayscale transition-all flex items-center justify-center gap-3"
-                >
-                  {isBettingProcessing ? (
-                    <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <>
-                      <Zap className="w-5 h-5 fill-white" />
-                      Confirm & Fund Wallet
-                    </>
-                  )}
-                </motion.button>
+                <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
+                  <motion.button
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    disabled={isBettingProcessing || !bettingPlatform || !bettingUserId || !bettingAmount}
+                    onClick={async () => {
+                      const amt = parseFloat(bettingAmount);
+                      if (amt > user.balance) {
+                        setBettingError('Insufficient Balance');
+                        return;
+                      }
+                      if (amt < 100) {
+                        setBettingError('Min amount is 100');
+                        return;
+                      }
+                      
+                      setIsBettingProcessing(true);
+                      setBettingError('');
+                      
+                      // Simulate processing
+                      await new Promise(r => setTimeout(r, 2000));
+                      
+                      const updatedUser = { ...user, balance: user.balance - amt };
+                      const transaction = {
+                        type: 'betting',
+                        title: `${bettingPlatform} Top-up`,
+                        amount: -amt,
+                        icon: (
+                          <div className="w-full h-full p-1 overflow-hidden rounded-2xl">
+                            <img 
+                              src={`https://picsum.photos/seed/${bettingPlatform.toLowerCase()}/80/80`} 
+                              alt={bettingPlatform}
+                              className="w-full h-full object-cover rounded-lg"
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+                        ),
+                        date: 'Just now',
+                        ref: `BET-${Math.random().toString(36).substring(7).toUpperCase()}`,
+                        bettingPlatform,
+                        bettingUserId
+                      };
+                      
+                      setLastTransaction(transaction);
+                      onUpdateUser(updatedUser);
+                      
+                      setIsBettingProcessing(false);
+                      setBettingModalOpen(false);
+                      setReceiptModalOpen(true);
+                      setBettingPlatform('');
+                      setBettingUserId('');
+                      setBettingAmount('');
+                    }}
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-amber-500/25 disabled:opacity-50 disabled:grayscale transition-all flex items-center justify-center gap-3"
+                  >
+                    {isBettingProcessing ? (
+                      <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    ) : (
+                      <>
+                        <Zap className="w-5 h-5 fill-white" />
+                        Confirm & Fund Wallet
+                      </>
+                    )}
+                  </motion.button>
+                  <div className="mt-6 flex items-center justify-center gap-2 opacity-40">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em]">Secure Transaction</span>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -8128,8 +8161,9 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
               { id: 'cards', label: 'Cards', icon: <CreditCard className="w-6 h-6" /> },
               { id: 'me', label: 'Me', icon: <UserIcon className="w-6 h-6" /> },
             ].map((item) => (
-              <button
+              <motion.button
                 key={item.id}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setNavView(item.id as any)}
                 className={`flex flex-col items-center gap-1.5 py-1 px-3 rounded-2xl transition-all relative ${navView === item.id ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
               >
@@ -8140,12 +8174,15 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                   {item.label}
                 </span>
                 {navView === item.id && (
-                  <motion.div 
-                    layoutId="activeNav"
-                    className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-1 bg-blue-600 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.6)]"
-                  />
+                  <>
+                    <motion.div 
+                      layoutId="activeNav"
+                      className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-1 bg-blue-600 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.6)]"
+                    />
+                    <div className="absolute inset-0 bg-blue-50 dark:bg-blue-900/10 rounded-2xl -z-10 blur-sm" />
+                  </>
                 )}
-              </button>
+              </motion.button>
             ))}
           </div>
         )}
@@ -8461,13 +8498,26 @@ function TransactionSuccessScreen({
         </div>
         
         <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Date</span>
+          <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+            <Calendar className="w-3 h-3" /> Date & Time
+          </span>
           <div className="text-right">
             <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 block">
-              {transaction.createdAt ? (transaction.createdAt.toDate ? transaction.createdAt.toDate().toLocaleDateString() : new Date(transaction.createdAt).toLocaleDateString()) : new Date().toLocaleDateString()}
+              {(() => {
+                try {
+                  const date = transaction.createdAt?.toDate 
+                    ? transaction.createdAt.toDate() 
+                    : (transaction.createdAt ? new Date(transaction.createdAt) : new Date());
+                  return isNaN(date.getTime()) 
+                    ? new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                    : date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                } catch (e) {
+                  return new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                }
+              })()}
             </span>
             <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">
-              {currentTime.toLocaleTimeString()}
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </span>
           </div>
         </div>

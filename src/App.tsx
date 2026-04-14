@@ -562,13 +562,15 @@ function checkTransactionLimit(user: User, amount: number): { allowed: boolean, 
 
 // -------- OTP VERIFICATION COMPONENT -------- 
 // -------- PIN SETUP COMPONENT -------- 
-function PinSetup({ onComplete, dark, setDark }: { onComplete: (pin: string) => void, dark: boolean, setDark: (d: boolean) => void }) {
+function PinSetup({ onComplete, dark, setDark }: { onComplete: (pin: string) => Promise<void>, dark: boolean, setDark: (d: boolean) => void }) {
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     if (pin.length !== 4 || confirmPin.length !== 4) {
       setError('PIN must be 4 digits');
       return;
@@ -577,7 +579,15 @@ function PinSetup({ onComplete, dark, setDark }: { onComplete: (pin: string) => 
       setError('PINs do not match');
       return;
     }
-    onComplete(pin);
+    
+    setIsLoading(true);
+    try {
+      await onComplete(pin);
+    } catch (err: any) {
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -645,9 +655,14 @@ function PinSetup({ onComplete, dark, setDark }: { onComplete: (pin: string) => 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            className="w-full py-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-black text-lg shadow-xl transition-all"
+            disabled={isLoading}
+            className="w-full py-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-black text-lg shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Set Transaction PIN
+            {isLoading ? (
+              <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              'Set Transaction PIN'
+            )}
           </motion.button>
         </form>
       </motion.div>
@@ -656,7 +671,7 @@ function PinSetup({ onComplete, dark, setDark }: { onComplete: (pin: string) => 
 }
 
 // -------- SIGN UP COMPONENT -------- 
-function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { onSignUp: (user: User) => void, onGoogleSignUp: () => void, onBackToLogin: () => void, dark: boolean, setDark: (d: boolean) => void }) {
+function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { onSignUp: (user: User) => Promise<void>, onGoogleSignUp: () => Promise<void>, onBackToLogin: () => void, dark: boolean, setDark: (d: boolean) => void }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -665,9 +680,36 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
   const [referralCode, setReferralCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const getPasswordStrength = (pass: string) => {
+    if (!pass) return { score: 0, label: '', color: 'bg-gray-200' };
+    let score = 0;
+    if (pass.length >= 8) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+    switch (score) {
+      case 0:
+      case 1: return { score: 25, label: 'Weak', color: 'bg-red-500' };
+      case 2: return { score: 50, label: 'Fair', color: 'bg-yellow-500' };
+      case 3: return { score: 75, label: 'Good', color: 'bg-blue-500' };
+      case 4: return { score: 100, label: 'Strong', color: 'bg-emerald-500' };
+      default: return { score: 0, label: '', color: 'bg-gray-200' };
+    }
+  };
+
+  const strength = getPasswordStrength(password);
+
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    
+    if (name.trim().split(' ').length < 2) {
+      setError('Please enter your full name (First and Last name)');
+      return;
+    }
     if (phone.length < 10) {
       setError('Please enter a valid phone number');
       return;
@@ -676,11 +718,13 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
       setError('Passwords do not match');
       return;
     }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
       return;
     }
     
+    setIsLoading(true);
+    try {
       const newUser: User = {
         name,
         phone,
@@ -688,11 +732,16 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
         password,
         referralCode,
         invitationCode: `SV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-        balance: 100000, // Initial balance as requested
+        balance: 100000,
         accountNumber: Math.floor(Math.random() * 9000000000 + 1000000000).toString(),
       };
     
-    onSignUp(newUser);
+      await onSignUp(newUser);
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during sign up');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -824,6 +873,20 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {password && (
+                <div className="mt-2 px-1">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Strength: {strength.label}</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${strength.score}%` }}
+                      className={`h-full ${strength.color} transition-all duration-500`}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="space-y-1">
               <label className="text-xs font-bold text-gray-400 uppercase ml-1">Confirm</label>
@@ -863,9 +926,14 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white w-full py-5 rounded-2xl font-black text-lg shadow-xl shadow-emerald-500/20 transform transition mt-4"
+            disabled={isLoading}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white w-full py-5 rounded-2xl font-black text-lg shadow-xl shadow-emerald-500/20 transform transition mt-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Create Account
+            {isLoading ? (
+              <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              'Create Account'
+            )}
           </motion.button>
 
           <div className="flex items-center gap-4 my-6">
@@ -876,8 +944,19 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
 
           <button 
             type="button"
-            onClick={onGoogleSignUp}
-            className="w-full bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 text-gray-900 dark:text-white py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-3 hover:shadow-md transition-all active:scale-95 mb-4"
+            disabled={isLoading}
+            onClick={async () => {
+              setError('');
+              setIsLoading(true);
+              try {
+                await onGoogleSignUp();
+              } catch (err: any) {
+                setError(err.message || 'Google Sign Up failed');
+              } finally {
+                setIsLoading(false);
+              }
+            }}
+            className="w-full bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 text-gray-900 dark:text-white py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-3 hover:shadow-md transition-all active:scale-95 mb-4 disabled:opacity-50"
           >
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
             <span>Sign up with Google</span>
@@ -904,7 +983,7 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
 }
 
 // -------- LOGIN COMPONENT -------- 
-function Login({ onLogin, onGoToSignUp, users, dark, setDark }: { onLogin: (loginData: any, remember: boolean) => void, onGoToSignUp: () => void, users: User[], dark: boolean, setDark: (d: boolean) => void }) {
+function Login({ onLogin, onGoToSignUp, onGoogleLogin, users, dark, setDark }: { onLogin: (loginData: any, remember: boolean) => Promise<void>, onGoToSignUp: () => void, onGoogleLogin: () => Promise<void>, users: User[], dark: boolean, setDark: (d: boolean) => void }) {
   const [phone, setPhone] = useState(() => {
     const savedPhone = localStorage.getItem('sagevault-remember-phone');
     if (savedPhone) {
@@ -931,10 +1010,19 @@ function Login({ onLogin, onGoToSignUp, users, dark, setDark }: { onLogin: (logi
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin({ phone, password }, remember);
+    setError('');
+    setIsLoading(true);
+    try {
+      await onLogin({ phone, password }, remember);
+    } catch (err: any) {
+      setError(err.message || 'Invalid credentials. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -1068,8 +1156,19 @@ function Login({ onLogin, onGoToSignUp, users, dark, setDark }: { onLogin: (logi
 
           <button 
             type="button"
-            onClick={() => onLogin({} as any, remember)}
-            className="w-full bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 text-gray-900 dark:text-white py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-3 hover:shadow-md transition-all active:scale-95 mb-4"
+            disabled={isLoading}
+            onClick={async () => {
+              setError('');
+              setIsLoading(true);
+              try {
+                await onGoogleLogin();
+              } catch (err: any) {
+                setError(err.message || 'Google Sign In failed');
+              } finally {
+                setIsLoading(false);
+              }
+            }}
+            className="w-full bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 text-gray-900 dark:text-white py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-3 hover:shadow-md transition-all active:scale-95 mb-4 disabled:opacity-50"
           >
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
             <span>Sign in with Google</span>
@@ -1088,9 +1187,14 @@ function Login({ onLogin, onGoToSignUp, users, dark, setDark }: { onLogin: (logi
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            className="bg-purple-600 hover:bg-purple-700 text-white w-full py-5 rounded-2xl font-black text-lg shadow-xl shadow-purple-500/20 transform transition mt-4"
+            disabled={isLoading}
+            className="bg-purple-600 hover:bg-purple-700 text-white w-full py-5 rounded-2xl font-black text-lg shadow-xl shadow-purple-500/20 transform transition mt-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Sign In
+            {isLoading ? (
+              <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              'Sign In'
+            )}
           </motion.button>
         </form>
         <div className="text-center mt-6">
@@ -2821,6 +2925,23 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
   const [isInvestmentProcessing, setIsInvestmentProcessing] = useState(false);
   const [investmentError, setInvestmentError] = useState('');
   const [navView, setNavView] = useState<'home' | 'card' | 'me' | 'invitation' | 'cards' | 'transactions' | 'payments'>('home');
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsNavigating(true);
+    const timer = setTimeout(() => setIsNavigating(false), 400);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return () => clearTimeout(timer);
+  }, [navView]);
   const [lastTransaction, setLastTransaction] = useState<any>(null);
   
   // Transaction Filter States
@@ -4801,6 +4922,19 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
         </div>
 
         <div className={`${navView === 'cards' ? 'max-w-full' : 'max-w-7xl'} mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 ${isMobile ? 'pb-32' : ''}`}>
+          {/* Navigation Loading Bar */}
+          <AnimatePresence>
+            {isNavigating && (
+              <motion.div 
+                initial={{ width: 0, opacity: 1 }}
+                animate={{ width: '100%', opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 z-[100] shadow-[0_0_10px_rgba(37,99,235,0.5)]"
+              />
+            )}
+          </AnimatePresence>
+
           {/* Header Section */}
           <header className="flex justify-between items-center mb-10">
             <div className="flex items-center gap-3">
@@ -4809,12 +4943,13 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 <motion.button 
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.05, x: -2 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setNavView('home')}
-                  className="p-2.5 bg-gray-100 dark:bg-zinc-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors mr-1 group"
+                  className="flex items-center gap-2 p-2.5 bg-gray-100 dark:bg-zinc-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all mr-1 group"
                 >
                   <ArrowLeft className="w-5 h-5 text-gray-500 group-hover:text-blue-600 transition-colors" />
+                  <span className="hidden lg:block text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors">Back</span>
                 </motion.button>
               )}
               <div className={isMobile ? "hidden sm:block" : ""}>
@@ -4823,9 +4958,9 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
               </div>
             </div>
             
-            <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-xl mx-8">
-              <div className="hidden md:flex items-center bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl px-4 py-2.5 shadow-sm w-full">
-                <Search className="w-4 h-4 text-gray-400 mr-2" />
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-xl mx-4 sm:mx-8">
+              <div className="hidden md:flex items-center bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl px-4 py-2.5 shadow-sm w-full group focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
+                <Search className="w-4 h-4 text-gray-400 mr-2 group-focus-within:text-blue-600 transition-colors" />
                 <input 
                   type="text" 
                   placeholder="Search transactions..." 
@@ -4834,6 +4969,18 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                   className="bg-transparent border-none outline-none text-sm font-medium w-full" 
                 />
               </div>
+              <motion.button
+                whileHover={{ rotate: 180 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => {
+                  setIsNavigating(true);
+                  setTimeout(() => setIsNavigating(false), 600);
+                  showToast('Data refreshed');
+                }}
+                className="p-3 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl shadow-sm hover:shadow-md transition-all hidden sm:flex items-center justify-center"
+              >
+                <RefreshCcw className={`w-4 h-4 text-gray-400 ${isNavigating ? 'animate-spin' : ''}`} />
+              </motion.button>
             </div>
 
             <div className="flex items-center gap-3 sm:gap-4">
@@ -4866,7 +5013,16 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
+              className="relative"
             >
+              {isNavigating && (
+                <div className="absolute inset-0 z-50 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-[2px] rounded-[3rem] flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 animate-pulse">Syncing...</span>
+                  </div>
+                </div>
+              )}
               {navView === 'transactions' && (
           <main className="space-y-8">
             <div className="flex justify-between items-center">
@@ -8152,6 +8308,23 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             </motion.div>
           </AnimatePresence>
 
+        {/* Scroll to Top Button */}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0, y: 20 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className={`fixed ${isMobile ? 'bottom-24' : 'bottom-8'} right-8 z-[60] p-4 bg-blue-600 text-white rounded-2xl shadow-xl shadow-blue-600/30 flex items-center justify-center`}
+            >
+              <ArrowUp className="w-6 h-6" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
         {/* Bottom Navigation */}
         {isMobile && (
           <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-t border-gray-100 dark:border-zinc-800 px-6 py-3 flex justify-between items-center z-40 pb-safe">
@@ -8711,7 +8884,7 @@ function App() {
     return `SV${digits}`;
   };
 
-  const handleSignUp = (newUser: any) => {
+  const handleSignUp = async (newUser: any) => {
     setTempUser({
       ...newUser,
       accountNumber: generateAccountNumber(),
@@ -8785,8 +8958,18 @@ function App() {
           console.log("User closed the auth popup.");
           return;
         }
+        if (error.code === 'auth/email-already-in-use') {
+          throw new Error('This email is already registered. Please sign in instead.');
+        }
+        if (error.code === 'auth/weak-password') {
+          throw new Error('Password is too weak. Please use a stronger password.');
+        }
+        if (error.code === 'auth/invalid-email') {
+          throw new Error('Invalid email address format.');
+        }
         console.error("Signup completion error:", error);
         setTempUser(null);
+        throw error;
       }
     }
   };
@@ -8833,11 +9016,14 @@ function App() {
         console.log("User closed the login popup.");
         return;
       }
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-        alert("Invalid credentials. Please try again.");
-        return;
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-email') {
+        throw new Error("Invalid credentials. Please check your phone/email and password.");
+      }
+      if (error.code === 'auth/too-many-requests') {
+        throw new Error("Too many failed login attempts. Please try again later.");
       }
       console.error("Login error:", error);
+      throw error;
     }
   };
 
@@ -8961,6 +9147,7 @@ function App() {
                 <Login 
                   users={[]} 
                   onLogin={handleLogin} 
+                  onGoogleLogin={() => handleLogin({} as any, false)}
                   onGoToSignUp={() => setView('signup')} 
                   dark={dark}
                   setDark={setDark}

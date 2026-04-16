@@ -1,37 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-primary: "Inter", sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-primary: "Plus Jakarta Sans", "Inter", sans-serif;
   --font-secondary: "Poppins", sans-serif;
 }
 
 :root {
+  scroll-behavior: smooth;
   --font-primary: 'Inter', sans-serif;
   --font-secondary: 'Poppins', sans-serif;
 
   /* DEFAULT (LIGHT MODE) */
-  --text-primary: #020617; /* slate-950 */
-  --text-secondary: #1E293B; /* slate-800 */
-  --text-muted: #475569; /* slate-600 */
-  --bg-main: #F8FAFC; /* slate-50 */
-  --bg-card: #FFFFFF;
-  --border-main: #CBD5E1; /* slate-300 */
+  --text-primary: #00E5FF; /* Cyan */
+  --text-secondary: #00E5FF; /* Cyan */
+  --text-muted: #00E5FF; /* Cyan */
+  --bg-main: #FFFFFF; /* Pure White */
+  --bg-card: #F8FAFC; /* slate-50 */
+  --border-main: #E2E8F0; /* slate-200 */
 
   /* BRAND COLORS */
-  --purple: #6C2BD9;
-  --green: #16A34A;
-  --yellow: #EAB308;
+  --purple: #8B5CF6;
+  --green: #10B981;
+  --yellow: #F6E05E;
 }
 
 .dark {
-  --text-primary: #FFFFFF;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --bg-main: #0B0F19;
-  --bg-card: #121826;
-  --border-main: #1E293B;
+  /* DARK MODE - HIGH CONTRAST */
+  --text-primary: #FFFFFF; /* Pure White */
+  --text-secondary: #63B3ED; /* High-visibility Light Sky Blue */
+  --text-muted: #A0AEC0; /* Light Gray */
+  --bg-main: #000000; /* True Black */
+  --bg-card: #121212; /* Deep Charcoal */
+  --border-main: #2D3748; /* slate-700 */
+  --green: #10B981;
+  --yellow: #FACC15;
 }
 
 /* ===============================
@@ -39,31 +43,32 @@
    =============================== */
 body {
   font-family: var(--font-primary);
-  font-weight: 500; /* More bold in light mode */
+  font-weight: 500;
   background: var(--bg-main);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   transition: background-color 0.3s ease, color 0.3s ease;
+  letter-spacing: 0.03em; /* Increased letter spacing for readability */
 }
 
 .dark body {
-  font-weight: 400; /* Normal weight in dark mode */
+  font-weight: 500; /* Keep it bold enough in dark mode */
 }
 
 /* ===============================
    4. HEADINGS (CLEAR & BOLD)
    =============================== */
 h1, h2, h3, h4 {
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 800; /* Extra bold for titles */
+  letter-spacing: 0.02em;
   color: var(--text-primary);
 }
 
-h1 { font-size: 28px; }
-h2 { font-size: 22px; }
-h3 { font-size: 18px; }
+h1 { font-size: 32px; }
+h2 { font-size: 24px; }
+h3 { font-size: 20px; }
 
 /* ===============================
    5. PARAGRAPH TEXT
@@ -78,24 +83,26 @@ p {
 /* ===============================
    6. INPUT FIELDS (VERY IMPORTANT)
    =============================== */
-input, select {
+input, select, textarea {
   font-family: var(--font-primary);
   font-size: 16px;
-  color: var(--text-primary);
-  background: var(--bg-card);
+  color: #000000; /* Black text for writing */
+  background: #FFFFFF; /* White background for readability */
   border: 1px solid var(--border-main);
-  padding: 12px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 14px;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
   border-color: var(--purple);
+  box-shadow: 0 0 0 4px rgba(108, 43, 217, 0.1);
 }
 
-input::placeholder {
+input::placeholder, textarea::placeholder {
   color: var(--text-muted);
+  font-weight: 400;
 }
 
 /* ===============================
@@ -103,52 +110,42 @@ input::placeholder {
    =============================== */
 label {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   display: block;
   text-transform: uppercase;
-  letter-spacing: 0.025em;
+  letter-spacing: 0.05em;
 }
 
-/* Contrast Overrides for Light Mode */
-.text-gray-100, .text-zinc-100, .text-slate-100 {
-  color: #94A3B8; /* slate-400 */
-}
+/* Contrast Overrides for Light Mode - Cyan Theme */
+.text-gray-100, .text-zinc-100, .text-slate-100 { color: #00E5FF; }
+.text-gray-200, .text-zinc-200, .text-slate-200 { color: #00E5FF; }
+.text-gray-300, .text-zinc-300, .text-slate-300 { color: #00E5FF; }
+.text-gray-400, .text-zinc-400, .text-slate-400 { color: #00E5FF; }
+.text-gray-500, .text-zinc-500, .text-slate-500 { color: #00E5FF; }
+.text-gray-600, .text-zinc-600, .text-slate-600 { color: #00E5FF; }
 
-.text-gray-200, .text-zinc-200, .text-slate-200 {
-  color: #64748B; /* slate-500 */
-}
+/* Dark Mode Restores */
+.dark .text-gray-100, .dark .text-zinc-100, .dark .text-slate-100 { color: #F7FAFC; }
+.dark .text-gray-200, .dark .text-zinc-200, .dark .text-slate-200 { color: #EDF2F7; }
+.dark .text-gray-300, .dark .text-zinc-300, .dark .text-slate-300 { color: #E2E8F0; }
+.dark .text-gray-400, .dark .text-zinc-400, .dark .text-slate-400 { color: #A0AEC0; } /* Secondary text - High Visibility */
+.dark .text-gray-500, .dark .text-zinc-500, .dark .text-slate-500 { color: #CBD5E0; }
+.dark .text-gray-600, .dark .text-zinc-600, .dark .text-slate-600 { color: #A0AEC0; }
 
-.text-gray-300, .text-zinc-300, .text-slate-300 {
-  color: #475569; /* slate-600 */
-}
+/* Brand Color Accessibility */
+.text-blue-600 { color: #1D4ED8; }
+.text-emerald-600 { color: #059669; }
+.text-purple-600 { color: #6D28D9; }
+.text-indigo-600 { color: #4338CA; }
 
-.text-gray-400, .text-zinc-400, .text-slate-400 {
-  color: #334155; /* slate-700 */
-}
-
-.text-gray-500, .text-zinc-500, .text-slate-500 {
-  color: #1E293B; /* slate-800 */
-}
-
-.text-gray-600, .text-zinc-600, .text-slate-600 {
-  color: #0F172A; /* slate-900 */
-}
-
-/* Also override some common brand colors that might be too light in light mode */
-.text-blue-600 {
-  color: #1D4ED8; /* blue-700 */
-}
-.text-emerald-600 {
-  color: #047857; /* emerald-700 */
-}
-.text-purple-600 {
-  color: #6D28D9; /* purple-700 */
-}
-.text-indigo-600 {
-  color: #4338CA; /* indigo-700 */
-}
+.dark .text-blue-600 { color: #3B82F6; }
+.dark .text-emerald-600 { color: #10B981; }
+.dark .text-purple-600 { color: #8B5CF6; }
+.dark .text-indigo-600 { color: #6366F1; }
+.dark .text-indigo-900 { color: #63B3ED; } /* High visibility sky blue override */
+.dark .text-slate-950 { color: #FFFFFF; }
 
 .text-slate-900, .text-gray-900, .text-zinc-900 {
   color: var(--text-primary);
@@ -163,7 +160,7 @@ label {
 }
 
 .dark .text-gray-400, .dark .text-zinc-400, .dark .text-slate-400 {
-  color: #94A3B8; /* slate-400 */
+  color: #A0AEC0; /* High visibility secondary text */
 }
 
 .dark .text-gray-500, .dark .text-zinc-500, .dark .text-slate-500 {
@@ -214,5 +211,24 @@ button {
    12. SUCCESS TEXT
    =============================== */
 .text-success {
-  color: #22C55E;
+  color: #059669;
+  font-weight: 700;
+}
+
+/* Ensure no text has opacity below 0.8 */
+[class*="text-"] {
+  opacity: 1 !important;
+}
+
+[class*="opacity-"] {
+  opacity: 1 !important;
+}
+
+/* Specific overrides for common low-opacity patterns */
+.text-white\/70, .text-white\/60, .text-white\/80 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.text-black\/70, .text-black\/60, .text-black\/80 {
+  color: rgba(0, 0, 0, 0.9) !important;
 }

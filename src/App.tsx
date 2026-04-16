@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// #region 1. IMPORTS & TYPES
 import React, { useState, useEffect, useRef, Component, ReactNode, ErrorInfo } from 'react';
 import axios from 'axios';
 import { 
@@ -19,6 +20,7 @@ import {
   Eye, 
   EyeOff, 
   ChevronRight, 
+  ChevronLeft,
   Search, 
   Bell, 
   Shield, 
@@ -185,10 +187,13 @@ import {
   arrayUnion,
   increment,
   deleteDoc
-} from './firebase';
+} from './components/firebase';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+// #endregion
+
+// #region 2. UTILITIES & ERROR HANDLING
 enum OperationType {
   CREATE = 'create',
   UPDATE = 'update',
@@ -611,7 +616,7 @@ function PinSetup({ onComplete, dark, setDark }: { onComplete: (pin: string) => 
           <Zap className="w-10 h-10 text-emerald-600" />
         </div>
         <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Secure Your Account</h2>
-        <p className="text-gray-500 dark:text-gray-400 mb-8 font-medium">Create a 4-digit PIN for transfers and sensitive actions.</p>
+        <p className="text-gray-500 dark:text-sky-400 mb-8 font-medium">Create a 4-digit PIN for transfers and sensitive actions.</p>
         
         <form onSubmit={handleSubmit} className="space-y-6 text-left">
           <div className="grid grid-cols-2 gap-4">
@@ -764,7 +769,7 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
               Secure Your <br />
               <span className="text-emerald-400">Financial Future</span>
             </h2>
-            <p className="text-white/70 text-lg font-medium leading-relaxed">
+            <p className="text-white/90 text-lg font-medium leading-relaxed">
               Join thousands of users who trust SageVault for their daily banking, savings, and investments.
             </p>
           </div>
@@ -773,23 +778,23 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
         <div className="relative z-10 flex items-center gap-8">
           <div className="flex -space-x-4">
             {[5, 6, 7, 8].map(i => (
-              <div key={i} className="w-12 h-12 rounded-full border-4 border-white/10 overflow-hidden">
+              <div key={i} className="w-12 h-12 rounded-full border-4 border-white/20 overflow-hidden">
                 <img src={`https://i.pravatar.cc/100?img=${i + 30}`} alt="User" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
             ))}
           </div>
-          <div className="text-white/60 text-sm font-bold uppercase tracking-widest">
+          <div className="text-white/80 text-sm font-black uppercase tracking-widest">
             Trusted by <span className="text-white">50k+</span> active members
           </div>
         </div>
       </div>
 
     {/* Right Side: Sign Up Form */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-gray-50 dark:bg-zinc-950 relative overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-white dark:bg-zinc-950 relative overflow-y-auto">
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
           <button 
             onClick={() => setDark(!dark)} 
-            className="bg-slate-900 dark:bg-zinc-900 border border-slate-800 dark:border-zinc-800 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-bold text-[10px] sm:text-xs flex items-center gap-2 hover:shadow-md transition-all active:scale-95"
+            className="bg-slate-900 dark:bg-zinc-900 border-2 border-slate-800 dark:border-zinc-800 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-black text-[10px] sm:text-xs flex items-center gap-2 hover:shadow-xl transition-all active:scale-95"
           >
             {dark ? <Sun className="w-3.5 h-3.5 sm:w-4 h-4 text-yellow-500" /> : <Moon className="w-3.5 h-3.5 sm:w-4 h-4 text-white" />}
             <span>{dark ? 'Light Mode' : 'Dark Mode'}</span>
@@ -799,7 +804,7 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl w-full max-w-md border border-gray-100 dark:border-zinc-800 my-8"
+          className="bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl w-full max-w-md border-2 border-gray-100 dark:border-zinc-800 my-8"
         >
           <div className="text-center mb-8 sm:mb-10 lg:hidden">
             <div className="inline-flex items-center justify-center mb-3 sm:mb-4">
@@ -809,8 +814,8 @@ function SignUp({ onSignUp, onGoogleSignUp, onBackToLogin, dark, setDark }: { on
           </div>
 
           <div className="mb-8 sm:mb-10">
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight mb-2">Create Account</h3>
-            <p className="text-gray-400 text-sm sm:text-base font-medium">Fill in your details to get started</p>
+            <h3 className="text-2xl sm:text-3xl font-black tracking-tight mb-2 text-zinc-950 dark:text-white">Create Account</h3>
+            <p className="text-gray-600 dark:text-zinc-400 text-sm sm:text-base font-black uppercase tracking-widest">Fill in your details to get started</p>
           </div>
           
           <form onSubmit={handleSignUp} className="space-y-4">
@@ -1045,7 +1050,7 @@ function Login({ onLogin, onGoToSignUp, onGoogleLogin, users, dark, setDark }: {
               The Future of <br />
               <span className="text-emerald-400">Digital Banking</span>
             </h2>
-            <p className="text-white/70 text-lg font-medium leading-relaxed">
+            <p className="text-white/90 text-lg font-medium leading-relaxed">
               Experience seamless cross-border transfers, virtual cards, and AI-powered financial insights all in one place.
             </p>
           </div>
@@ -1054,23 +1059,23 @@ function Login({ onLogin, onGoToSignUp, onGoogleLogin, users, dark, setDark }: {
         <div className="relative z-10 flex items-center gap-8">
           <div className="flex -space-x-4">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="w-12 h-12 rounded-full border-4 border-white/10 overflow-hidden">
+              <div key={i} className="w-12 h-12 rounded-full border-4 border-white/20 overflow-hidden">
                 <img src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="User" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
             ))}
           </div>
-          <div className="text-white/60 text-sm font-bold uppercase tracking-widest">
+          <div className="text-white/80 text-sm font-black uppercase tracking-widest">
             Joined by <span className="text-white">10k+</span> users globally
           </div>
         </div>
       </div>
 
       {/* Right Side: Login Form */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-gray-50 dark:bg-zinc-950 relative overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-white dark:bg-zinc-950 relative overflow-y-auto">
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
           <button 
             onClick={() => setDark(!dark)} 
-            className="bg-slate-900 dark:bg-zinc-900 border border-slate-800 dark:border-zinc-800 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-bold text-[10px] sm:text-xs flex items-center gap-2 hover:shadow-md transition-all active:scale-95"
+            className="bg-slate-900 dark:bg-zinc-900 border-2 border-slate-800 dark:border-zinc-800 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-black text-[10px] sm:text-xs flex items-center gap-2 hover:shadow-xl transition-all active:scale-95"
           >
             {dark ? <Sun className="w-3.5 h-3.5 sm:w-4 h-4 text-yellow-500" /> : <Moon className="w-3.5 h-3.5 sm:w-4 h-4 text-white" />}
             <span>{dark ? 'Light Mode' : 'Dark Mode'}</span>
@@ -1080,7 +1085,7 @@ function Login({ onLogin, onGoToSignUp, onGoogleLogin, users, dark, setDark }: {
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl w-full max-w-md border border-gray-100 dark:border-zinc-800 my-8"
+          className="bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl w-full max-w-md border-2 border-gray-100 dark:border-zinc-800 my-8"
         >
           <div className="text-center mb-8 sm:mb-10 lg:hidden">
             <div className="inline-flex items-center justify-center mb-3 sm:mb-4">
@@ -1090,8 +1095,8 @@ function Login({ onLogin, onGoToSignUp, onGoogleLogin, users, dark, setDark }: {
           </div>
 
           <div className="mb-8 sm:mb-10">
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight mb-2">Welcome Back</h3>
-            <p className="text-gray-400 text-sm sm:text-base font-medium">Enter your credentials to access your vault</p>
+            <h3 className="text-2xl sm:text-3xl font-black tracking-tight mb-2 text-zinc-950 dark:text-white">Welcome Back</h3>
+            <p className="text-gray-600 dark:text-zinc-400 text-sm sm:text-base font-black uppercase tracking-widest">Enter your credentials to access your vault</p>
           </div>
           
           <form onSubmit={handleLoginSubmit} className="space-y-5">
@@ -1429,14 +1434,36 @@ function ProfileModal({ open, onClose, user, onUpdateUser, dark }: {
   );
 }
 
-function HelpModal({ open, onClose, dark }: { open: boolean, onClose: () => void, dark: boolean }) {
+function HelpModal({ open, onClose, dark, onOpenChat }: { open: boolean, onClose: () => void, dark: boolean, onOpenChat: () => void }) {
+  const [view, setView] = useState('main');
+  const [selectedTopic, setSelectedTopic] = useState<any>(null);
+
   const helpTopics = [
-    { title: 'Getting Started', icon: <BookOpen className="w-5 h-5" />, description: 'Learn the basics of SageVault' },
-    { title: 'Security & Privacy', icon: <ShieldCheck className="w-5 h-5" />, description: 'How we keep your funds safe' },
-    { title: 'Transfers & Payments', icon: <CreditCard className="w-5 h-5" />, description: 'Troubleshoot transaction issues' },
-    { title: 'Account Limits', icon: <TrendingUp className="w-5 h-5" />, description: 'Understand tiers and upgrades' },
-    { title: 'Contact Support', icon: <MessageSquare className="w-5 h-5" />, description: 'Chat with our support team' },
+    { title: 'Getting Started', icon: <BookOpen className="w-5 h-5" />, description: 'Learn the basics of SageVault', content: 'Welcome to SageVault! To get started, you can explore your dashboard, link your bank account, and make your first deposit. Our intuitive interface makes managing your finances a breeze.' },
+    { title: 'Security & Privacy', icon: <ShieldCheck className="w-5 h-5" />, description: 'How we keep your funds safe', content: 'We use 256-bit AES encryption and multi-factor authentication to ensure your data and funds are always protected. Your privacy is our top priority.' },
+    { title: 'Transfers & Payments', icon: <CreditCard className="w-5 h-5" />, description: 'Troubleshoot transaction issues', content: 'Transfers between SageVault accounts are instant. For external transfers, please allow 1-3 business days for processing. If you encounter any issues, check your transaction history for details.' },
+    { title: 'Account Limits', icon: <TrendingUp className="w-5 h-5" />, description: 'Understand tiers and upgrades', content: 'Your account tier determines your daily and monthly transaction limits. You can upgrade your tier by completing the KYC verification process in the Me section.' },
+    { title: 'Contact Support', icon: <MessageSquare className="w-5 h-5" />, description: 'Chat with our support team', content: 'Our support team is available 24/7. You can start a live chat or send us an email at support@sagevault.com for any inquiries.' },
+    { title: 'Q&A / FAQ', icon: <HelpCircle className="w-5 h-5" />, description: 'Find answers to common questions', isQA: true },
   ];
+
+  const faqs = [
+    { q: "How do I reset my PIN?", a: "Go to Me > Settings > Security > Reset PIN and follow the instructions." },
+    { q: "How long do transfers take?", a: "Internal transfers are instant. External transfers take 1-3 business days." },
+    { q: "Is my money safe?", a: "Yes, SageVault uses bank-grade encryption and is fully regulated." },
+    { q: "How do I upgrade my tier?", a: "Go to Dashboard > Upgrade Tier and upload your ID for verification." },
+    { q: "What are the fees?", a: "SageVault offers zero-fee internal transfers. External transfers may incur a small processing fee depending on your tier." },
+  ];
+
+  useEffect(() => {
+    if (!open) {
+      const timer = setTimeout(() => {
+        setView('main');
+        setSelectedTopic(null);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
   return (
     <AnimatePresence>
@@ -1456,52 +1483,131 @@ function HelpModal({ open, onClose, dark }: { open: boolean, onClose: () => void
             className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-950 rounded-t-[3rem] z-[120] shadow-2xl p-8 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black tracking-tight">Help & Support</h3>
+              <div className="flex items-center gap-4">
+                {view !== 'main' && (
+                  <button 
+                    onClick={() => setView('main')}
+                    className="p-2 bg-gray-100 dark:bg-zinc-800 rounded-full hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                )}
+                <h3 className="text-2xl font-black tracking-tight">
+                  {view === 'main' ? 'Help & Support' : view === 'qa' ? 'Q&A Center' : selectedTopic?.title}
+                </h3>
+              </div>
               <button onClick={onClose} className="p-3 bg-gray-100 dark:bg-zinc-800 rounded-full">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
-            <div className="relative mb-8">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input 
-                type="text" 
-                placeholder="Search for help topics..."
-                className="w-full p-5 pl-14 bg-gray-50 dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 font-bold outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-              />
-            </div>
+            {view === 'main' && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <div className="relative mb-8">
+                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input 
+                    type="text" 
+                    placeholder="Search for help topics..."
+                    className="w-full p-5 pl-14 bg-gray-50 dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 font-bold outline-none focus:ring-2 focus:ring-purple-500 transition-all text-black dark:text-white"
+                  />
+                </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {helpTopics.map((topic, i) => (
-                <button 
-                  key={i}
-                  className="w-full p-6 bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all text-left group"
-                >
-                  <div className="p-3 bg-white dark:bg-zinc-800 rounded-xl shadow-sm text-purple-500 group-hover:scale-110 transition-transform">
-                    {topic.icon}
-                  </div>
-                  <div>
-                    <p className="font-black text-sm tracking-tight">{topic.title}</p>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{topic.description}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
+                <div className="grid grid-cols-1 gap-4">
+                  {helpTopics.map((topic, i) => (
+                    <button 
+                      key={i}
+                      onClick={() => {
+                        if (topic.isQA) {
+                          setView('qa');
+                        } else {
+                          setSelectedTopic(topic);
+                          setView('topic');
+                        }
+                      }}
+                      className="w-full p-6 bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all text-left group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-white dark:bg-zinc-800 rounded-xl shadow-sm text-purple-500 group-hover:scale-110 transition-transform">
+                          {topic.icon}
+                        </div>
+                        <div>
+                          <p className="font-black text-sm tracking-tight">{topic.title}</p>
+                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{topic.description}</p>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-purple-500 transition-colors" />
+                    </button>
+                  ))}
+                </div>
 
-            <div className="mt-8 p-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-[2.5rem] text-center text-white shadow-xl shadow-purple-500/20">
-              <div className="flex -space-x-3 justify-center mb-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="w-10 h-10 rounded-full border-2 border-purple-600 bg-white overflow-hidden">
-                    <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Support Agent" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <div className="mt-8 p-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-[2.5rem] text-center text-white shadow-xl shadow-purple-500/20">
+                  <div className="flex -space-x-3 justify-center mb-4">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="w-10 h-10 rounded-full border-2 border-purple-600 bg-white overflow-hidden">
+                        <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Support Agent" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm font-black tracking-tight mb-1">Still need help?</p>
+                  <p className="text-[10px] text-white/60 uppercase tracking-widest font-black mb-6">Our team is available 24/7</p>
+                  <button 
+                    onClick={() => {
+                      onClose();
+                      onOpenChat();
+                    }}
+                    className="w-full py-4 bg-white text-purple-600 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all mb-3"
+                  >
+                    Start Live Chat
+                  </button>
+                  <button 
+                    onClick={() => setView('qa')}
+                    className="w-full py-4 bg-purple-500/20 border border-purple-400/30 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all"
+                  >
+                    Open Q&A Center
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {view === 'qa' && (
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="space-y-4"
+              >
+                {faqs.map((faq, i) => (
+                  <div key={i} className="p-6 bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800">
+                    <p className="font-black text-sm mb-2 text-purple-600">{faq.q}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-bold leading-relaxed">{faq.a}</p>
                   </div>
                 ))}
-              </div>
-              <p className="text-sm font-black tracking-tight mb-1">Still need help?</p>
-              <p className="text-[10px] text-white/60 uppercase tracking-widest font-black mb-6">Our team is available 24/7</p>
-              <button className="w-full py-4 bg-white text-purple-600 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">
-                Start Live Chat
-              </button>
-            </div>
+              </motion.div>
+            )}
+
+            {view === 'topic' && selectedTopic && (
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="p-8 bg-gray-50 dark:bg-zinc-900 rounded-[3rem] border border-gray-100 dark:border-zinc-800"
+              >
+                <div className="w-16 h-16 bg-white dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-purple-500 shadow-sm mb-6">
+                  {selectedTopic.icon}
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-300 font-bold leading-relaxed">
+                  {selectedTopic.content}
+                </p>
+                <button 
+                  onClick={() => setView('main')}
+                  className="mt-8 w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-xs font-black uppercase tracking-widest"
+                >
+                  Back to Topics
+                </button>
+              </motion.div>
+            )}
           </motion.div>
         </>
       )}
@@ -1675,16 +1781,18 @@ function UpgradeModal({ open, onClose, user, onUpdateUser, dark }: {
 
 // -------- HELPERS --------
 const formatTxDate = (timestamp: any) => {
-  if (!timestamp) {
-    return 'N/A';
+  if (!timestamp) return 'Just now';
+  try {
+    let date;
+    if (timestamp.toDate) date = timestamp.toDate();
+    else if (timestamp.seconds) date = new Date(timestamp.seconds * 1000);
+    else date = new Date(timestamp);
+    
+    if (isNaN(date.getTime())) return 'Just now';
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch (e) {
+    return 'Just now';
   }
-  let date;
-  if (timestamp.toDate) {
-    date = timestamp.toDate();
-  } else {
-    date = new Date(timestamp.seconds * 1000);
-  }
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 const getTxIcon = (type: string) => {
@@ -1727,40 +1835,40 @@ function TransactionDetailsModal({ open, onClose, transaction, symbol, convert, 
             exit={{ scale: 0.9, opacity: 0 }}
             className="relative z-10 bg-white dark:bg-zinc-900 w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl"
           >
-            <div className={`p-8 text-center text-white ${transaction.isCredit ? 'bg-emerald-500' : 'bg-slate-800 dark:bg-zinc-800'}`}>
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden">
+            <div className={`p-8 text-center text-white ${transaction.isCredit ? 'bg-emerald-600' : 'bg-slate-900 dark:bg-zinc-800'}`}>
+              <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden">
                 {getTxIcon(transaction.isCredit ? 'credit' : transaction.type)}
               </div>
-              <h3 className="text-2xl font-black tracking-tight">
+              <h3 className="text-2xl font-bold tracking-tight">
                 {transaction.isCredit ? 'Credit Received' : 'Transaction Details'}
               </h3>
-              <p className="text-white/80 font-bold mt-1 uppercase text-[10px] tracking-widest">Transaction Receipt</p>
+              <p className="text-white font-bold mt-1 uppercase text-[10px] tracking-widest">Transaction Receipt</p>
             </div>
 
             <div className="p-8 space-y-6">
               <div className="text-center">
-                <h2 className={`text-4xl font-black tracking-tighter ${transaction.isCredit ? 'text-emerald-500' : 'text-slate-900 dark:text-white'}`}>
+                <h2 className={`text-4xl font-bold tracking-tighter ${transaction.isCredit ? 'text-[#059669]' : 'text-[#000000] dark:text-white'}`}>
                   {transaction.isCredit ? '+' : '-'}{symbol}{convert(Math.abs(transaction.amount))}
                 </h2>
-                <p className="text-gray-400 text-xs font-bold mt-1">{formatTxDate(transaction.createdAt)}</p>
+                <p className="text-[#1F2937] dark:text-sky-400 text-xs font-bold mt-1">{formatTxDate(transaction.createdAt)}</p>
               </div>
 
-              <div className="space-y-4 border-t border-dashed border-gray-200 dark:border-zinc-800 pt-6">
+              <div className="space-y-4 border-t border-dashed border-gray-300 dark:border-zinc-800 pt-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-400 text-xs font-bold uppercase">Type</span>
-                  <span className="font-bold text-sm uppercase">{transaction.type}</span>
+                  <span className="text-[#1F2937] dark:text-sky-400 text-xs font-black uppercase">Type</span>
+                  <span className="font-bold text-sm uppercase text-[#000000] dark:text-zinc-100">{transaction.type}</span>
                 </div>
                 
                 {transaction.type === 'transfer' && (
                   <>
                     <div className="flex justify-between">
-                      <span className="text-gray-400 text-xs font-bold uppercase">{transaction.isCredit ? 'Sender' : 'Recipient'}</span>
-                      <span className="font-bold text-sm">{transaction.accountName || transaction.senderAccount || transaction.receiverAccount}</span>
+                      <span className="text-[#1F2937] dark:text-sky-400 text-xs font-black uppercase">{transaction.isCredit ? 'Sender' : 'Recipient'}</span>
+                      <span className="font-bold text-sm text-[#000000] dark:text-zinc-100">{transaction.accountName || transaction.senderAccount || transaction.receiverAccount}</span>
                     </div>
                     {transaction.bankName && (
                       <div className="flex justify-between">
-                        <span className="text-gray-400 text-xs font-bold uppercase">Bank</span>
-                        <span className="font-bold text-sm">{transaction.bankName}</span>
+                        <span className="text-[#1F2937] dark:text-sky-400 text-xs font-black uppercase">Bank</span>
+                        <span className="font-bold text-sm text-[#000000] dark:text-zinc-100">{transaction.bankName}</span>
                       </div>
                     )}
                   </>
@@ -1768,34 +1876,34 @@ function TransactionDetailsModal({ open, onClose, transaction, symbol, convert, 
 
                 {transaction.phoneNumber && (
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-xs font-bold uppercase">Phone</span>
-                    <span className="font-bold text-sm">{transaction.phoneNumber}</span>
+                    <span className="text-[#1F2937] dark:text-sky-400 text-xs font-black uppercase">Phone</span>
+                    <span className="font-bold text-sm text-[#000000] dark:text-zinc-100">{transaction.phoneNumber}</span>
                   </div>
                 )}
 
                 {transaction.network && (
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-xs font-bold uppercase">Network</span>
-                    <span className="font-bold text-sm">{transaction.network}</span>
+                    <span className="text-[#1F2937] dark:text-sky-400 text-xs font-black uppercase">Network</span>
+                    <span className="font-bold text-sm text-[#000000] dark:text-zinc-100">{transaction.network}</span>
                   </div>
                 )}
 
                 {transaction.note && (
-                  <div className="p-4 bg-gray-50 dark:bg-zinc-800/50 rounded-2xl border border-gray-100 dark:border-zinc-700/50">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Note</p>
-                    <p className="text-xs font-medium italic">"{transaction.note}"</p>
+                  <div className="p-4 bg-gray-100 dark:bg-zinc-800/50 rounded-2xl border border-gray-200 dark:border-zinc-700/50">
+                    <p className="text-[11px] font-black text-[#1F2937] dark:text-sky-400 uppercase tracking-widest mb-1">Note</p>
+                    <p className="text-xs font-bold italic text-[#000000] dark:text-zinc-100">"{transaction.note}"</p>
                   </div>
                 )}
 
                 <div className="flex justify-between">
-                  <span className="text-gray-400 text-xs font-bold uppercase">Ref Number</span>
-                  <span className="font-bold text-sm font-mono">{transaction.ref || transaction.id?.slice(0, 8).toUpperCase()}</span>
+                  <span className="text-[#1F2937] dark:text-sky-400 text-xs font-black uppercase">Ref Number</span>
+                  <span className="font-bold text-sm font-mono text-[#000000] dark:text-zinc-100">{transaction.ref || transaction.id?.slice(0, 8).toUpperCase()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400 text-xs font-bold uppercase">Status</span>
-                  <span className={`font-black text-sm uppercase ${
-                    (transaction.status || 'success') === 'success' ? 'text-emerald-500' : 
-                    (transaction.status === 'pending' ? 'text-amber-500' : 'text-rose-500')
+                  <span className="text-[#1F2937] dark:text-sky-400 text-xs font-black uppercase">Status</span>
+                  <span className={`font-bold text-sm uppercase ${
+                    (transaction.status || 'success') === 'success' ? 'text-[#059669]' : 
+                    (transaction.status === 'pending' ? 'text-amber-800' : 'text-rose-800')
                   }`}>
                     {transaction.status || 'Completed'}
                   </span>
@@ -1816,23 +1924,24 @@ function TransactionDetailsModal({ open, onClose, transaction, symbol, convert, 
   );
 }
 
+// #region 3. SUB-COMPONENTS
 function TransactionItem({ transaction, symbol, convert, onClick, onToggleFavorite }: { transaction: any, symbol: string, convert: (amt: number) => string, onClick: () => void, onToggleFavorite?: (e: React.MouseEvent) => void }) {
   return (
     <motion.div 
       whileHover={{ scale: 1.01, x: 5 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-gray-50 dark:border-zinc-800 flex justify-between items-center cursor-pointer hover:shadow-md transition-all group relative overflow-hidden"
+      className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border-2 border-gray-100 dark:border-zinc-800 flex justify-between items-center cursor-pointer hover:shadow-lg transition-all group relative overflow-hidden"
     >
       <div className="flex items-center gap-4">
-        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${transaction.isCredit ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 text-gray-600'}`}>
+        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${transaction.isCredit ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-400'}`}>
           {getTxIcon(transaction.isCredit ? 'credit' : transaction.type)}
         </div>
         <div>
-          <p className="font-bold text-base">{transaction.isCredit ? `Credit from ${transaction.senderAccount}` : transaction.name}</p>
+          <p className="font-bold text-base text-slate-950 dark:text-white">{transaction.isCredit ? `Credit from ${transaction.senderAccount}` : transaction.name}</p>
           <div className="flex items-center gap-2">
-            <p className="text-xs text-gray-400 font-medium">{formatTxDate(transaction.createdAt)}</p>
-            <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest bg-gray-50 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+            <p className="text-xs text-indigo-900 dark:text-sky-400 font-black uppercase tracking-widest">{formatTxDate(transaction.createdAt)}</p>
+            <span className="text-[9px] font-black text-slate-950 dark:text-gray-300 uppercase tracking-widest bg-slate-100 dark:bg-zinc-800 px-2 py-1 rounded">
               Ref: {transaction.ref || transaction.id?.slice(0, 8).toUpperCase()}
             </span>
           </div>
@@ -1840,12 +1949,12 @@ function TransactionItem({ transaction, symbol, convert, onClick, onToggleFavori
       </div>
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <p className={`font-black text-base ${transaction.isCredit ? 'text-emerald-500' : 'text-slate-900 dark:text-white'}`}>
+          <p className={`font-bold text-lg ${transaction.isCredit ? 'text-emerald-700 dark:text-emerald-500' : 'text-slate-950 dark:text-white'}`}>
             {transaction.isCredit ? '+' : '-'}{symbol}{convert(transaction.amount)}
           </p>
-          <p className={`text-[10px] font-bold uppercase tracking-widest ${
-            (transaction.status || 'success') === 'success' ? 'text-gray-400' : 
-            (transaction.status === 'pending' ? 'text-amber-500' : 'text-rose-500')
+          <p className={`text-[11px] font-black uppercase tracking-widest ${
+            (transaction.status || 'success') === 'success' ? 'text-indigo-900 dark:text-sky-400' : 
+            (transaction.status === 'pending' ? 'text-amber-800' : 'text-rose-800')
           }`}>
             {transaction.status || 'Completed'}
           </p>
@@ -1855,7 +1964,7 @@ function TransactionItem({ transaction, symbol, convert, onClick, onToggleFavori
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.8 }}
             onClick={onToggleFavorite}
-            className={`p-2 rounded-xl transition-colors ${transaction.isFavorite ? 'text-amber-500 bg-amber-50 dark:bg-amber-900/20' : 'text-gray-300 hover:text-amber-500'}`}
+            className={`p-2 rounded-xl transition-colors ${transaction.isFavorite ? 'text-amber-600 bg-amber-100 dark:bg-amber-900/20' : 'text-gray-400 hover:text-amber-600'}`}
           >
             <Star className={`w-4 h-4 ${transaction.isFavorite ? 'fill-current' : ''}`} />
           </motion.button>
@@ -1868,28 +1977,27 @@ function TransactionItem({ transaction, symbol, convert, onClick, onToggleFavori
 function TransactionSummary({ totalInflow, totalOutflow, symbol }: { totalInflow: number, totalOutflow: number, symbol: string }) {
   return (
     <div className="grid grid-cols-2 gap-4 mb-8">
-      <div className="bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-[2rem] border border-emerald-100 dark:border-emerald-900/20">
+      <div className="bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-[2rem] border-2 border-emerald-100 dark:border-emerald-900/20 shadow-sm">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-emerald-500 text-white rounded-xl">
+          <div className="p-2 bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-600/20">
             <ArrowDownLeft className="w-4 h-4" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Total Inflow</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-400">Total Inflow</span>
         </div>
-        <p className="text-2xl font-black text-emerald-700 dark:text-emerald-400">{symbol}{totalInflow.toLocaleString()}</p>
+        <p className="text-2xl font-black text-emerald-900 dark:text-emerald-400">{symbol}{totalInflow.toLocaleString()}</p>
       </div>
-      <div className="bg-rose-50 dark:bg-rose-900/10 p-6 rounded-[2rem] border border-rose-100 dark:border-rose-900/20">
+      <div className="bg-rose-50 dark:bg-rose-900/10 p-6 rounded-[2rem] border-2 border-rose-100 dark:border-rose-900/20 shadow-sm">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-rose-500 text-white rounded-xl">
+          <div className="p-2 bg-rose-600 text-white rounded-xl shadow-lg shadow-rose-600/20">
             <ArrowUpRight className="w-4 h-4" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">Total Outflow</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-rose-800 dark:text-rose-400">Total Outflow</span>
         </div>
-        <p className="text-2xl font-black text-rose-700 dark:text-rose-400">{symbol}{totalOutflow.toLocaleString()}</p>
+        <p className="text-2xl font-black text-rose-900 dark:text-rose-400">{symbol}{totalOutflow.toLocaleString()}</p>
       </div>
     </div>
   );
 }
-
 function TransactionChart({ chartData, symbol, dark }: { chartData: any[], symbol: string, dark: boolean }) {
   return (
     <div className="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800 mb-8">
@@ -2056,8 +2164,8 @@ function SearchUsersModal({ open, onClose, onSelect, dark }: {
           >
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-black tracking-tight">Search Receivers</h3>
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1">Find SageVault users</p>
+                <h3 className="text-2xl font-bold tracking-tight text-[#0A0A0A] dark:text-white">Search Receivers</h3>
+                <p className="text-[10px] text-indigo-900 dark:text-sky-400 font-black uppercase tracking-widest mt-1">Find SageVault users</p>
               </div>
               <button onClick={onClose} className="p-3 bg-gray-100 dark:bg-zinc-800 rounded-full">
                 <X className="w-6 h-6" />
@@ -2097,12 +2205,12 @@ function SearchUsersModal({ open, onClose, onSelect, dark }: {
                     onClick={() => onSelect(r)}
                     className="w-full p-5 bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl flex items-center gap-4 text-left group transition-all hover:bg-blue-50 dark:hover:bg-blue-900/10"
                   >
-                    <div className="w-12 h-12 bg-white dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-blue-600 font-black text-lg shadow-sm group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 bg-white dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-blue-600 font-bold text-lg shadow-sm group-hover:scale-110 transition-transform">
                       {r.name.charAt(0)}
                     </div>
                     <div className="flex-1">
-                      <p className="font-black text-base tracking-tight">{r.name}</p>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{r.accountNumber}</p>
+                      <p className="font-bold text-base tracking-tight text-[#0A0A0A] dark:text-white">{r.name}</p>
+                      <p className="text-[10px] font-black text-indigo-900 dark:text-sky-400 uppercase tracking-widest">{r.accountNumber}</p>
                     </div>
                     <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors" />
                   </motion.button>
@@ -2477,11 +2585,11 @@ function TransactionHistoryModal({ open, onClose, transactions, user, currency, 
           >
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-2xl font-black tracking-tight">Account Statement</h3>
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Detailed Transaction Analysis</p>
+                <h3 className="text-3xl font-black tracking-tight">Account Statement</h3>
+                <p className="text-xs text-gray-600 dark:text-zinc-400 font-black uppercase tracking-[0.2em] mt-1">Detailed Transaction Analysis</p>
               </div>
-              <button onClick={onClose} className="p-3 bg-gray-100 dark:bg-zinc-800 rounded-full">
-                <X className="w-6 h-6" />
+              <button onClick={onClose} className="p-3 bg-gray-100 dark:bg-zinc-800 rounded-full hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors">
+                <X className="w-6 h-6 text-zinc-950 dark:text-white" />
               </button>
             </div>
 
@@ -2489,18 +2597,18 @@ function TransactionHistoryModal({ open, onClose, transactions, user, currency, 
             <div className="mb-8 space-y-4">
               <div className="flex gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                   <input 
                     type="text" 
                     placeholder="Search by name, account, or type..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500 font-bold transition-all"
+                    className="w-full pl-12 pr-4 py-4 bg-white dark:bg-zinc-900 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500 font-black transition-all"
                   />
                 </div>
                 <button 
                   onClick={() => setShowFilters(!showFilters)}
-                  className={`p-4 rounded-2xl border transition-all ${showFilters ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-gray-50 dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 text-gray-400'}`}
+                  className={`p-4 rounded-2xl border-2 transition-all ${showFilters ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 text-gray-600 hover:border-indigo-200'}`}
                 >
                   <Filter className="w-6 h-6" />
                 </button>
@@ -2691,7 +2799,9 @@ function TransactionHistoryModal({ open, onClose, transactions, user, currency, 
   );
 }
 
+// #region 4. DASHBOARD COMPONENT
 function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, adIndex }: { user: User, transactions: any[], onLogout: () => void, onUpdateUser: (user: User) => void, dark: boolean, setDark: (d: boolean) => void, adIndex: number }) {
+// #region 4.1. STATE & EFFECTS
   const ads = [
     "chop with us with TripChow",
     "spend quality internet time with Sagehub",
@@ -2735,6 +2845,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
     return () => unsubscribe();
   }, []);
 
+// #region 4.2. HANDLERS
   const handlePostTestimony = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTestimony.trim()) return;
@@ -2914,7 +3025,6 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
   const [billsModalOpen, setBillsModalOpen] = useState(false);
   const [cardsModalOpen, setCardsModalOpen] = useState(false);
   const [receiptModalOpen, setReceiptModalOpen] = useState(false);
-  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [cardTopUpModalOpen, setCardTopUpModalOpen] = useState(false);
   const [bettingModalOpen, setBettingModalOpen] = useState(false);
   const [investmentModalOpen, setInvestmentModalOpen] = useState(false);
@@ -2924,7 +3034,8 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
   const [investmentAgreementAccepted, setInvestmentAgreementAccepted] = useState(false);
   const [isInvestmentProcessing, setIsInvestmentProcessing] = useState(false);
   const [investmentError, setInvestmentError] = useState('');
-  const [navView, setNavView] = useState<'home' | 'card' | 'me' | 'invitation' | 'cards' | 'transactions' | 'payments'>('home');
+// #region 4.3. NAVIGATION & VIEW LOGIC
+  const [navView, setNavView] = useState<'home' | 'card' | 'me' | 'invitation' | 'cards' | 'transactions' | 'payments' | 'settings'>('home');
   const [isNavigating, setIsNavigating] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -3372,6 +3483,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
     }
   }, [phoneNumber]);
 
+// #region 4.4. TRANSFER FLOW
   const handleTransferSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseFloat(amount);
@@ -3380,14 +3492,14 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
       setTransferError('Please enter a valid amount');
       return;
     }
-    
-    if (numAmount > user.balance) {
-      setTransferError('Insufficient balance');
+
+    if (!bankName) {
+      setTransferError('Please select a bank');
       return;
     }
 
-    if (accountNumber.length < 10) {
-      setTransferError('Invalid account number');
+    if (!accountNumber || accountNumber.length < 10) {
+      setTransferError('Please enter a valid 10-digit account number');
       return;
     }
 
@@ -3408,6 +3520,24 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
     if (type !== 'Card' && (isNaN(numAmount) || numAmount <= 0)) {
       setTransferError('Please enter a valid amount');
       return;
+    }
+
+    if (type === 'Airtime' || type === 'Data') {
+      if (!phoneNumber || phoneNumber.length < 10) {
+        setTransferError('Please enter a valid phone number');
+        return;
+      }
+      if (!network) {
+        setTransferError('Please select a network');
+        return;
+      }
+    }
+
+    if (type === 'TV' || type === 'Bill') {
+      if (!customerRef) {
+        setTransferError('Please enter a customer reference number');
+        return;
+      }
     }
     if (type !== 'Card' && numAmount > user.balance) {
       setTransferError('Insufficient balance');
@@ -3560,7 +3690,8 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
           setLastTransaction({
             id: txRef.id,
             ...txData,
-            date: 'Just now',
+            createdAt: new Date(),
+            date: new Date().toISOString(),
             icon: <Send className="w-6 h-6 text-blue-600" />
           });
         }));
@@ -3639,26 +3770,37 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
 
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: `You are Sage AI, a financial assistant for SageVault. The user is ${user.name}. Their balance is ${symbol}${convert(user.balance)}. Answer the following query concisely: ${userMessage}` }]
-          }
-        ],
-        config: {
-          systemInstruction: "You are a helpful, professional, and friendly financial assistant for a fintech app called SageVault. Keep responses short and actionable."
-        }
-      });
+      
+      // Build conversation history for context
+      const historyContext = messages.slice(-5).map(m => `${m.role === 'user' ? 'User' : 'Sage AI'}: ${m.content}`).join('\n');
 
-      const aiResponseText = response.text || "I'm sorry, I couldn't process that. Please try again.";
-      let aiResponse = aiResponseText;
-      if (response.text) {
-        aiResponse = response.text;
-      } else {
-        aiResponse = "I'm sorry, I couldn't process that. Please try again.";
-      }
+      const prompt = `You are Sage AI, the official financial assistant for SageVault. 
+      
+      User Profile:
+      - Name: ${user.name}
+      - Current Balance: ${symbol}${convert(user.balance)}
+      - Account Tier: ${user.tier || 1}
+      - Recent Transactions: ${transactions.slice(0, 3).map(t => `${t.type} of ${symbol}${convert(t.amount)} to/from ${t.name}`).join(', ')}
+      
+      Conversation History:
+      ${historyContext}
+      
+      User Query: ${userMessage}
+      
+      Instructions:
+      1. Be professional, friendly, and highly personalized.
+      2. Use the user's name (${user.name}) occasionally.
+      3. Provide actionable financial advice based on their balance and tier.
+      4. If they have a low balance, suggest saving tips. If high, suggest investments.
+      5. Reference their recent transactions if relevant to their query.
+      6. Keep responses under 4 sentences unless a detailed explanation is needed.`;
+
+      const result = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [{ role: "user", parts: [{ text: prompt }] }]
+      });
+      const aiResponse = result.text || "I'm sorry, I couldn't process that.";
+      
       setMessages(prev => [...prev, { role: 'model', content: aiResponse }]);
     } catch (error) {
       console.error("Gemini API Error:", error);
@@ -3684,10 +3826,10 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
     { id: 'transactions', label: 'Transactions', icon: <ArrowUpRight className="w-5 h-5" /> },
     { id: 'cards', label: 'My Cards', icon: <CreditCard className="w-5 h-5" /> },
     { id: 'payments', label: 'Payments', icon: <Zap className="w-5 h-5" /> },
+    { id: 'me', label: 'Me', icon: <UserCircle className="w-5 h-5" /> },
   ];
 
   const preferenceItems = [
-    { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
     { id: 'help', label: 'Help & Support', icon: <HelpCircle className="w-5 h-5" /> },
   ];
 
@@ -4045,12 +4187,12 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             <CheckCircle2 className="w-12 h-12 text-white" />
           </motion.div>
           <div>
-            <h3 className="text-2xl font-black tracking-tight">Transfer Successful!</h3>
-            <p className="text-xs font-bold text-gray-400 dark:text-zinc-500 mt-2 uppercase tracking-widest">Your money is on its way</p>
+            <h3 className="text-2xl font-bold tracking-tight text-[#0A0A0A] dark:text-white">Transfer Successful!</h3>
+            <p className="text-xs font-bold text-[#059669] dark:text-emerald-400 mt-2 uppercase tracking-widest">Your money is on its way</p>
           </div>
-          <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-3xl border border-gray-100 dark:border-zinc-700/50">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Amount Sent</p>
-            <p className="text-3xl font-black text-blue-600">{symbol}{convert(parseFloat(amount))}</p>
+          <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-3xl border border-gray-200 dark:border-zinc-700/50">
+            <p className="text-[10px] font-black text-indigo-900 dark:text-sky-400 uppercase tracking-widest mb-1">Amount Sent</p>
+            <p className="text-3xl font-bold text-[#059669]">{symbol}{convert(parseFloat(amount))}</p>
           </div>
         </div>
       );
@@ -4246,12 +4388,12 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             <CheckCircle2 className="w-12 h-12 text-white" />
           </motion.div>
           <div>
-            <h3 className="text-2xl font-black tracking-tight">Recharge Successful!</h3>
-            <p className="text-xs font-bold text-gray-400 dark:text-zinc-500 mt-2 uppercase tracking-widest">Your airtime has been sent</p>
+            <h3 className="text-2xl font-bold tracking-tight text-[#0A0A0A] dark:text-white">Recharge Successful!</h3>
+            <p className="text-xs font-bold text-[#059669] dark:text-emerald-400 mt-2 uppercase tracking-widest">Your airtime has been sent</p>
           </div>
-          <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-3xl border border-gray-100 dark:border-zinc-700/50">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Amount Recharged</p>
-            <p className="text-3xl font-black text-emerald-600">{symbol}{convert(parseFloat(amount))}</p>
+          <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-3xl border border-gray-200 dark:border-zinc-700/50">
+            <p className="text-[10px] font-black text-indigo-900 dark:text-sky-400 uppercase tracking-widest mb-1">Amount Recharged</p>
+            <p className="text-3xl font-bold text-[#059669]">{symbol}{convert(parseFloat(amount))}</p>
           </div>
         </div>
       );
@@ -4452,12 +4594,12 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             <CheckCircle2 className="w-12 h-12 text-white" />
           </motion.div>
           <div>
-            <h3 className="text-2xl font-black tracking-tight">Data Purchase Successful!</h3>
-            <p className="text-xs font-bold text-gray-400 dark:text-zinc-500 mt-2 uppercase tracking-widest">Your data plan is active</p>
+            <h3 className="text-2xl font-bold tracking-tight text-[#0A0A0A] dark:text-white">Data Purchase Successful!</h3>
+            <p className="text-xs font-bold text-[#059669] dark:text-emerald-400 mt-2 uppercase tracking-widest">Your data plan is active</p>
           </div>
-          <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-3xl border border-gray-100 dark:border-zinc-700/50">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Plan Purchased</p>
-            <p className="text-3xl font-black text-blue-600">{dataPlan}</p>
+          <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-3xl border border-gray-200 dark:border-zinc-700/50">
+            <p className="text-[10px] font-black text-indigo-900 dark:text-sky-400 uppercase tracking-widest mb-1">Plan Purchased</p>
+            <p className="text-3xl font-bold text-[#059669]">{dataPlan}</p>
           </div>
         </div>
       );
@@ -4772,8 +4914,9 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
 
 
 
+// #region 4.5. MAIN RENDER LOGIC
   return (
-    <div className={`min-h-screen font-sans antialiased transition-colors duration-500 flex ${dark ? 'bg-[#0a0a0b] text-white' : 'bg-gray-50 text-slate-900'}`}>
+    <div className={`min-h-screen font-sans antialiased transition-colors duration-500 flex ${dark ? 'bg-[#0a0a0b] text-white' : 'bg-white text-slate-900'}`}>
       
       {/* Global Toast */}
       <AnimatePresence>
@@ -4812,16 +4955,17 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
               { id: 'card', label: 'Card', icon: <CreditCard className="w-5 h-5" /> },
               { id: 'invitation', label: 'Referral', icon: <Users className="w-5 h-5" /> },
               { id: 'me', label: 'Profile', icon: <UserCircle className="w-5 h-5" /> },
+              { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
             ].map(item => (
               <button
                 key={item.id}
                 onClick={() => setNavView(item.id as any)}
-                className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all group ${navView === item.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white'}`}
+                className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all group ${navView === item.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-zinc-950 dark:hover:text-white'}`}
               >
-                <div className={`${navView === item.id ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`}>
+                <div className={`${navView === item.id ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600'} transition-colors`}>
                   {item.icon}
                 </div>
-                <span className="font-bold text-sm">{item.label}</span>
+                <span className="font-black text-sm">{item.label}</span>
                 {navView === item.id && (
                   <motion.div layoutId="sidebar-active" className="ml-auto w-1.5 h-1.5 bg-white rounded-full" />
                 )}
@@ -4831,14 +4975,14 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
 
           <div className="mt-auto pt-8 border-t border-gray-100 dark:border-zinc-800">
             <button 
-              onClick={() => setSettingsModalOpen(true)}
-              className="w-full flex items-center gap-4 p-4 rounded-2xl text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white transition-all group"
+              onClick={() => setNavView('settings')}
+              className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all group ${navView === 'settings' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white'}`}
             >
-              <Settings className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
+              <Settings className={`w-5 h-5 ${navView === 'settings' ? 'text-white' : 'group-hover:rotate-90 transition-transform duration-500'}`} />
               <span className="font-bold text-sm">Settings</span>
             </button>
             <button 
-              onClick={() => { onLogout(); setSettingsModalOpen(false); }}
+              onClick={() => { onLogout(); }}
               className="w-full flex items-center gap-4 p-4 rounded-2xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all mt-2"
             >
               <LogOut className="w-5 h-5" />
@@ -4870,30 +5014,30 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             >
               <div className="flex justify-between items-center mb-8 shrink-0">
                 <div>
-                  <h3 className="font-black text-2xl uppercase tracking-tight">All Testimonials</h3>
-                  <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-400 uppercase tracking-widest">What our community says</p>
+                  <h3 className="font-black text-3xl uppercase tracking-tight">All Testimonials</h3>
+                  <p className="text-[10px] font-black text-gray-600 dark:text-zinc-400 uppercase tracking-[0.2em]">What our community says</p>
                 </div>
                 <button onClick={() => setShowAllTestimonials(false)} className="p-3 bg-gray-100 dark:bg-zinc-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors">
-                  <X className="w-6 h-6" />
+                  <X className="w-6 h-6 text-zinc-950 dark:text-white" />
                 </button>
               </div>
               
               <div className="flex-1 overflow-y-auto space-y-4 pr-2 scrollbar-hide">
                 {testimonials.map((t) => (
-                  <div key={t.id} className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-3xl border border-gray-100 dark:border-zinc-700/50">
+                  <div key={t.id} className="bg-white dark:bg-zinc-800/50 p-6 rounded-3xl border-2 border-slate-100 dark:border-blue-500/30 shadow-sm">
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-xs">
+                        <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-black text-xs">
                           {t.name.charAt(0)}
                         </div>
-                        <h4 className="font-bold text-base">{t.name}</h4>
+                        <h4 className="font-black text-base text-slate-950 dark:text-white">{t.name}</h4>
                       </div>
                       <div className="flex gap-0.5">
-                        {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-3 h-3 fill-amber-400 text-amber-400" />)}
+                        {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-3 h-3 fill-amber-500 text-amber-500" />)}
                       </div>
                     </div>
-                    <p className="text-gray-600 dark:text-zinc-300 text-sm leading-relaxed italic">"{t.text}"</p>
-                    <p className="text-[10px] text-gray-400 dark:text-zinc-500 font-bold mt-4 uppercase tracking-widest">
+                    <p className="text-slate-950 dark:text-white text-sm font-black leading-relaxed italic">"{t.text}"</p>
+                    <p className="text-[10px] text-indigo-900 dark:text-sky-400 font-black mt-4 uppercase tracking-widest">
                       {(() => {
                         if (t.createdAt) {
                           if (t.createdAt.toDate) {
@@ -4953,8 +5097,8 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 </motion.button>
               )}
               <div className={isMobile ? "hidden sm:block" : ""}>
-                <h2 className="text-2xl font-black tracking-tighter leading-none capitalize">{navView === 'home' ? 'Dashboard' : navView}</h2>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Welcome back, {(user.name || 'User').split(' ')[0]}</p>
+                <h2 className="text-2xl font-black tracking-tighter leading-none capitalize text-slate-950 dark:text-white">{navView === 'home' ? 'Dashboard' : navView}</h2>
+                <p className="text-[10px] font-black text-indigo-900 dark:text-sky-400 uppercase tracking-widest">Welcome back, {(user.name || 'User').split(' ')[0]}</p>
               </div>
             </div>
             
@@ -5516,7 +5660,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 rounded-t-[3rem] z-50 shadow-2xl p-8 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-black tracking-tight">
+                  <h3 className="text-2xl font-black tracking-tight text-white">
                     {transferStep === 'details' ? 'Send Money' : transferStep === 'confirm' ? 'Confirm Details' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}
                   </h3>
                   <motion.button 
@@ -5533,7 +5677,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                   <form onSubmit={handleTransferSubmit} className="space-y-6">
                     {recentRecipients.length > 0 && (
                       <div className="space-y-3">
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Recent</label>
+                        <label className="text-xs font-black text-[#1F2937] dark:text-sky-400 uppercase tracking-widest ml-1">Recent</label>
                         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                           {recentRecipients.map((recipient, i) => (
                             <motion.button
@@ -5545,15 +5689,15 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                                 setBankName(recipient.bankName);
                                 setAccountNumber(recipient.accountNumber);
                               }}
-                              className="flex-shrink-0 flex flex-col items-center gap-2 p-4 bg-white dark:bg-zinc-800 rounded-[2rem] border border-gray-100 dark:border-zinc-700 min-w-[120px] shadow-sm hover:shadow-md transition-all group"
+                              className="flex-shrink-0 flex flex-col items-center gap-2 p-4 bg-zinc-900 dark:bg-zinc-900/80 backdrop-blur-md rounded-[2rem] border-2 border-zinc-800 dark:border-blue-500/30 min-w-[120px] shadow-sm hover:shadow-md transition-all group hover:border-blue-500"
                             >
-                              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 transition-colors">
-                                <UserIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 rounded-full flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-500/20 transition-colors border-2 border-blue-200 dark:border-blue-500/50">
+                                <UserIcon className="w-6 h-6 text-blue-600 dark:text-sky-400" />
                               </div>
                               <div className="text-center space-y-0.5">
-                                <p className="text-[10px] font-black uppercase tracking-tight truncate w-24 text-zinc-900 dark:text-zinc-100">{recipient.accountName}</p>
-                                <p className="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">{recipient.bankName}</p>
-                                <p className="text-[8px] font-mono text-blue-500 font-bold">{recipient.accountNumber}</p>
+                                <p className="text-[10px] font-black uppercase tracking-tight truncate w-24 text-zinc-900 dark:text-white">{recipient.accountName}</p>
+                                <p className="text-[8px] font-bold text-gray-500 dark:text-sky-400 uppercase tracking-tighter">{recipient.bankName}</p>
+                                <p className="text-[8px] font-mono text-blue-600 dark:text-blue-400 font-bold">{recipient.accountNumber}</p>
                               </div>
                             </motion.button>
                           ))}
@@ -5563,7 +5707,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
 
                     <div className="space-y-3">
                       <div className="flex justify-between items-center px-1">
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Select Bank</label>
+                        <label className="text-xs font-black text-[#1F2937] dark:text-sky-400 uppercase tracking-widest ml-1">Select Bank</label>
                       </div>
                       <select 
                         value={bankName}
@@ -5608,7 +5752,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Account Number</label>
+                      <label className="text-xs font-black text-[#1F2937] dark:text-sky-400 uppercase tracking-widest ml-1">Account Number</label>
                       <div className="relative">
                         <input 
                           type="text"
@@ -5650,7 +5794,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Amount ({symbol})</label>
+                      <label className="text-xs font-black text-[#1F2937] dark:text-sky-400 uppercase tracking-widest ml-1">Amount ({symbol})</label>
                       <input 
                         type="number"
                         placeholder="0.00"
@@ -5686,7 +5830,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Note (Optional)</label>
+                      <label className="text-xs font-black text-[#1F2937] dark:text-sky-400 uppercase tracking-widest ml-1">Note (Optional)</label>
                       <input 
                         type="text"
                         placeholder="What's this for?"
@@ -5711,35 +5855,35 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 {transferStep === 'confirm' && (
                   <div className="space-y-8">
                     <div className="text-center space-y-2 mb-6">
-                      <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-blue-600 mx-auto mb-4">
-                        <ShieldCheck className="w-8 h-8" />
+                      <div className="w-20 h-20 bg-blue-50 dark:bg-blue-500/10 rounded-[2rem] flex items-center justify-center text-blue-600 dark:text-sky-400 mx-auto mb-4 border-2 border-blue-200 dark:border-blue-500/50 shadow-inner">
+                        <ShieldCheck className="w-10 h-10" />
                       </div>
-                      <h4 className="text-xl font-black tracking-tight">Confirm Transfer</h4>
-                      <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Please verify the details below</p>
+                      <h4 className="text-2xl font-black tracking-tight text-white">Confirm Transfer</h4>
+                      <p className="text-xs text-indigo-900 dark:text-sky-400 font-black uppercase tracking-widest">Please verify the details below</p>
                     </div>
 
-                    <div className="bg-gray-50 dark:bg-zinc-800 p-6 rounded-3xl space-y-4 border border-gray-100 dark:border-zinc-700">
+                    <div className="bg-gray-100 dark:bg-zinc-900 p-6 rounded-3xl space-y-4 border border-gray-300 dark:border-blue-500/30 shadow-xl">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Recipient</span>
-                        <span className="font-black text-sm tracking-tight">{accountName}</span>
+                        <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Recipient</span>
+                        <span className="font-black text-sm tracking-tight text-slate-950 dark:text-white">{accountName}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Bank</span>
-                        <span className="font-black text-sm tracking-tight">{bankName}</span>
+                        <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Bank</span>
+                        <span className="font-black text-sm tracking-tight text-slate-950 dark:text-white">{bankName}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Account</span>
-                        <span className="font-mono font-bold text-sm tracking-wider">{accountNumber}</span>
+                        <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Account</span>
+                        <span className="font-mono font-bold text-sm tracking-wider text-slate-950 dark:text-white">{accountNumber}</span>
                       </div>
-                      <div className="pt-4 border-t border-gray-200 dark:border-zinc-700 flex justify-between items-center">
-                        <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Total Amount</span>
-                        <span className="font-black text-2xl text-blue-600">{symbol}{convert(parseFloat(amount))}</span>
+                      <div className="pt-4 border-t border-gray-300 dark:border-zinc-800 flex justify-between items-center">
+                        <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Total Amount</span>
+                        <span className="font-black text-2xl text-blue-700 dark:text-blue-400">{symbol}{convert(parseFloat(amount))}</span>
                       </div>
                     </div>
 
-                    <div className="bg-amber-50 dark:bg-amber-900/10 p-4 rounded-2xl border border-amber-100 dark:border-amber-900/20 flex gap-3">
-                      <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
-                      <p className="text-[10px] font-bold text-amber-800 dark:text-amber-400/80 leading-relaxed uppercase tracking-tight">
+                    <div className="bg-amber-100 dark:bg-amber-900/10 p-5 rounded-2xl border border-amber-300 dark:border-amber-900/20 flex gap-3">
+                      <AlertCircle className="w-6 h-6 text-amber-700 shrink-0" />
+                      <p className="text-[11px] font-black text-amber-900 dark:text-amber-400 leading-relaxed uppercase tracking-tight">
                         Please ensure the recipient details are correct. Transfers are instant and irreversible.
                       </p>
                     </div>
@@ -5768,18 +5912,22 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 {transferStep === 'pin' && (
                   <form onSubmit={verifyPinAndSend} className="space-y-8">
                     <div className="text-center space-y-2">
-                      <p className="text-gray-500 font-medium">Enter your 4-digit transaction PIN to authorize this action.</p>
+                      <div className="w-20 h-20 bg-purple-50 dark:bg-purple-500/10 rounded-[2rem] flex items-center justify-center text-purple-600 dark:text-purple-400 mx-auto mb-4 border-2 border-purple-200 dark:border-purple-500/50 shadow-inner">
+                        <Lock className="w-10 h-10" />
+                      </div>
+                      <h4 className="text-2xl font-black tracking-tight text-white mb-4">Enter PIN</h4>
+                      <p className="text-indigo-900 dark:text-sky-400 font-black uppercase tracking-widest text-xs">Enter your 4-digit transaction PIN to authorize this action.</p>
                       <input 
                         type="password"
                         maxLength={4}
                         autoFocus
-                        className="w-full max-w-[200px] mx-auto p-4 bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4"
+                        className="w-full max-w-[240px] mx-auto p-6 bg-zinc-900 dark:bg-zinc-900 border-2 border-zinc-800 dark:border-blue-500 rounded-[2rem] text-center text-4xl font-black tracking-[1em] focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all mt-6 text-white dark:text-white shadow-2xl"
                         placeholder="••••"
                         value={transferPin}
                         onChange={e => setTransferPin(e.target.value.replace(/\D/g, ''))}
                         required
                       />
-                      {transferError && <p className="text-xs text-red-500 font-bold uppercase mt-2">{transferError}</p>}
+                      {transferError && <p className="text-xs text-red-600 font-bold uppercase mt-4">{transferError}</p>}
                     </div>
 
                     <div className="flex gap-4">
@@ -5836,7 +5984,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 rounded-t-[3rem] z-50 shadow-2xl p-8 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-black tracking-tight">{transferStep === 'details' ? 'Buy Airtime' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
+                  <h3 className="text-2xl font-black tracking-tight text-white">{transferStep === 'details' ? 'Buy Airtime' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
                   <motion.button 
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
@@ -5913,7 +6061,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                         type="password"
                         maxLength={4}
                         autoFocus
-                        className="w-full max-w-[200px] mx-auto p-4 bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-zinc-900 dark:text-zinc-100"
+                        className="w-full max-w-[200px] mx-auto p-4 bg-zinc-900 dark:bg-zinc-800 border border-zinc-800 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-white dark:text-zinc-100"
                         placeholder="••••"
                         value={transferPin}
                         onChange={e => setTransferPin(e.target.value.replace(/\D/g, ''))}
@@ -5960,7 +6108,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 rounded-t-[3rem] z-50 shadow-2xl p-8 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-black tracking-tight">{transferStep === 'details' ? 'Buy Data' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
+                  <h3 className="text-2xl font-black tracking-tight text-white">{transferStep === 'details' ? 'Buy Data' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
                   <motion.button 
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
@@ -6043,7 +6191,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                         type="password"
                         maxLength={4}
                         autoFocus
-                        className="w-full max-w-[200px] mx-auto p-4 bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-zinc-900 dark:text-zinc-100"
+                        className="w-full max-w-[200px] mx-auto p-4 bg-zinc-900 dark:bg-zinc-800 border border-zinc-800 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-white dark:text-zinc-100"
                         placeholder="••••"
                         value={transferPin}
                         onChange={e => setTransferPin(e.target.value.replace(/\D/g, ''))}
@@ -6097,7 +6245,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 rounded-t-[3rem] z-50 shadow-2xl p-8 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-black tracking-tight">{transferStep === 'details' ? 'TV Subscription' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
+                  <h3 className="text-2xl font-black tracking-tight text-white">{transferStep === 'details' ? 'TV Subscription' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
                   <motion.button 
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
@@ -6172,7 +6320,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                         type="password"
                         maxLength={4}
                         autoFocus
-                        className="w-full max-w-[200px] mx-auto p-4 bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-zinc-900 dark:text-zinc-100"
+                        className="w-full max-w-[200px] mx-auto p-4 bg-zinc-900 dark:bg-zinc-800 border border-zinc-800 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-white dark:text-zinc-100"
                         placeholder="••••"
                         value={transferPin}
                         onChange={e => setTransferPin(e.target.value.replace(/\D/g, ''))}
@@ -6225,7 +6373,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 rounded-t-[3rem] z-50 shadow-2xl p-8 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-black tracking-tight">{transferStep === 'details' ? 'Pay Bills' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
+                  <h3 className="text-2xl font-black tracking-tight text-white">{transferStep === 'details' ? 'Pay Bills' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
                   <motion.button 
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
@@ -6300,7 +6448,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                         type="password"
                         maxLength={4}
                         autoFocus
-                        className="w-full max-w-[200px] mx-auto p-4 bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-zinc-900 dark:text-zinc-100"
+                        className="w-full max-w-[200px] mx-auto p-4 bg-zinc-900 dark:bg-zinc-800 border border-zinc-800 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-white dark:text-zinc-100"
                         placeholder="••••"
                         value={transferPin}
                         onChange={e => setTransferPin(e.target.value.replace(/\D/g, ''))}
@@ -6353,7 +6501,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 rounded-t-[3rem] z-50 shadow-2xl p-8 max-h-[90vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-black tracking-tight">{transferStep === 'details' ? 'Create Virtual Card' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
+                  <h3 className="text-2xl font-black tracking-tight text-white">{transferStep === 'details' ? 'Create Virtual Card' : transferStep === 'success' ? 'Receipt' : 'Enter PIN'}</h3>
                   <motion.button 
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
@@ -6430,7 +6578,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                         type="password"
                         maxLength={4}
                         autoFocus
-                        className="w-full max-w-[200px] mx-auto p-4 bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-zinc-900 dark:text-zinc-100"
+                        className="w-full max-w-[200px] mx-auto p-4 bg-zinc-900 dark:bg-zinc-800 border border-zinc-800 dark:border-zinc-700 rounded-2xl text-center text-3xl font-black tracking-[1em] focus:ring-2 focus:ring-blue-500 outline-none transition-all mt-4 text-white dark:text-zinc-100"
                         placeholder="••••"
                         value={transferPin}
                         onChange={e => setTransferPin(e.target.value.replace(/\D/g, ''))}
@@ -6493,126 +6641,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
           )}
         </AnimatePresence>
 
-        {/* Settings Modal */}
-      <AnimatePresence>
-        {settingsModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSettingsModalOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              className="relative bg-white dark:bg-zinc-900 w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 shadow-2xl overflow-hidden"
-            >
-              <div className="flex justify-between items-center mb-8">
-                <div className="flex items-center gap-3">
-                  <Logo size="sm" />
-                  <h3 className="text-2xl font-black tracking-tight">Settings</h3>
-                </div>
-                <motion.button 
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setSettingsModalOpen(false)} 
-                  className="p-2 bg-gray-100 dark:bg-zinc-800 rounded-full"
-                >
-                  <X className="w-5 h-5" />
-                </motion.button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="p-4 bg-gray-50 dark:bg-zinc-800/50 rounded-2xl flex items-center gap-4">
-                  <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-xl flex items-center justify-center">
-                    <UserCircle className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="font-black text-sm">{user.name}</p>
-                    <p className="text-xs text-gray-400 font-bold">{user.phone}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-2">
-                  <motion.button 
-                    whileHover={{ x: 5, backgroundColor: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)' }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => { setDark(!dark); setSettingsModalOpen(false); }}
-                    className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-slate-800 dark:bg-blue-900/10 rounded-lg">
-                        {dark ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-white" />}
-                      </div>
-                      <span className="font-bold text-sm">Theme Mode</span>
-                    </div>
-                    <span className="text-xs font-black text-white dark:text-blue-400 bg-slate-900 dark:bg-transparent px-2 py-1 rounded-lg uppercase tracking-widest">{dark ? 'Light' : 'Dark'}</span>
-                  </motion.button>
-
-                  <motion.button 
-                    whileHover={{ x: 5, backgroundColor: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)' }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-emerald-50 dark:bg-emerald-900/10 rounded-lg">
-                        <Lock className="w-4 h-4 text-emerald-600" />
-                      </div>
-                      <span className="font-bold text-sm">Security & PIN</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-emerald-600 transition-colors" />
-                  </motion.button>
-
-                  <motion.button 
-                    whileHover={{ x: 5, backgroundColor: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)' }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-orange-50 dark:bg-orange-900/10 rounded-lg">
-                        <Smartphone className="w-4 h-4 text-orange-600" />
-                      </div>
-                      <span className="font-bold text-sm">Authorized Devices</span>
-                    </div>
-                    <span className="text-xs font-black text-orange-600 uppercase tracking-widest">
-                      {user.authorizedDevices?.length || 1} Active
-                    </span>
-                  </motion.button>
-
-                  <motion.button 
-                    whileHover={{ x: 5, backgroundColor: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)' }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-indigo-50 dark:bg-indigo-900/10 rounded-lg">
-                        <Bell className="w-4 h-4 text-indigo-600" />
-                      </div>
-                      <span className="font-bold text-sm">Notifications</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-indigo-600 transition-colors" />
-                  </motion.button>
-
-                  <div className="pt-4 mt-4 border-t border-gray-100 dark:border-zinc-800">
-                    <motion.button 
-                      whileHover={{ x: 5, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => { onLogout(); setSettingsModalOpen(false); }}
-                      className="w-full p-4 flex items-center gap-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-2xl transition-colors"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span className="font-black text-sm uppercase tracking-widest">Logout Session</span>
-                    </motion.button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+        {/* Settings View is handled in main content area */}
 
       {/* Transaction History Modal */}
       <TransactionHistoryModal 
@@ -6676,6 +6705,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
         open={helpModalOpen}
         onClose={() => setHelpModalOpen(false)}
         dark={dark}
+        onOpenChat={() => setChatOpen(true)}
       />
 
       {/* Upgrade Modal */}
@@ -7290,6 +7320,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                         type: 'betting',
                         title: `${bettingPlatform} Top-up`,
                         amount: -amt,
+                        createdAt: new Date(),
                         icon: (
                           <div className="w-full h-full p-1 overflow-hidden rounded-2xl">
                             <img 
@@ -7470,7 +7501,6 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
         {/* Floating AI Customer Service Button */}
         <motion.button
           drag
-          dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
           dragElastic={0.1}
           whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.9 }}
@@ -7529,10 +7559,10 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                       key={i} 
                       className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className={`max-w-[85%] p-4 rounded-3xl text-sm font-medium leading-relaxed shadow-sm ${
+                      <div className={`max-w-[85%] p-4 rounded-3xl text-sm font-black leading-relaxed shadow-sm ${
                         m.role === 'user' 
                           ? 'bg-purple-600 text-white rounded-tr-none' 
-                          : 'bg-gray-100 dark:bg-zinc-800 text-slate-800 dark:text-gray-200 rounded-tl-none'
+                          : 'bg-zinc-900 dark:bg-emerald-900/20 text-emerald-400 rounded-tl-none border border-emerald-500/30'
                       }`}>
                         <Markdown>{m.content}</Markdown>
                       </div>
@@ -7555,7 +7585,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                     <input 
                       value={input} 
                       onChange={e => setInput(e.target.value)} 
-                      className="flex-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium" 
+                      className="flex-1 bg-white dark:bg-zinc-900 border-2 border-slate-200 dark:border-zinc-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-black text-black dark:text-black" 
                       placeholder="Ask Sage anything..."
                     />
                     <button 
@@ -7566,7 +7596,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                       <Send className="w-6 h-6" />
                     </button>
                   </form>
-                  <p className="text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4">
+                  <p className="text-center text-[10px] text-indigo-900 dark:text-sky-400 font-black uppercase tracking-widest mt-4">
                     Powered by SageVault Intelligence
                   </p>
                 </div>
@@ -7576,6 +7606,123 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
         </AnimatePresence>
 
         {/* Testimonials Section */}
+        {navView === 'settings' && (
+          <main className="space-y-8">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-2xl font-black tracking-tight">Settings</h3>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Manage your account and preferences</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800 shadow-sm">
+                  <h4 className="text-lg font-black tracking-tight mb-6">Profile Information</h4>
+                  <div className="flex items-center gap-6 mb-8">
+                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-[2rem] flex items-center justify-center text-white font-black text-2xl overflow-hidden shadow-lg">
+                      {user.profileImage ? <img src={user.profileImage} alt="" className="w-full h-full object-cover" /> : user.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-xl font-black tracking-tight">{user.name}</p>
+                      <p className="text-sm text-gray-400 font-bold uppercase tracking-widest">{user.email}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border border-gray-100 dark:border-zinc-700">
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Phone Number</p>
+                      <p className="font-bold">{user.phone}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border border-gray-100 dark:border-zinc-700">
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Account Number</p>
+                      <p className="font-mono font-bold">{user.accountNumber}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800 shadow-sm">
+                  <h4 className="text-lg font-black tracking-tight mb-6">Security</h4>
+                  <div className="space-y-4">
+                    <button 
+                      onClick={() => {
+                        setPinResetStep('request');
+                        setPinResetEmail(user.email || '');
+                        setIsPinResetModalOpen(true);
+                      }}
+                      className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-all border border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-emerald-50 dark:bg-emerald-900/10 rounded-lg">
+                          <Lock className="w-4 h-4 text-emerald-600" />
+                        </div>
+                        <span className="font-bold text-sm">Change Transaction PIN</span>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-300" />
+                    </button>
+                    <button className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-all border border-transparent hover:border-gray-200 dark:hover:border-zinc-700">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-50 dark:bg-blue-900/10 rounded-lg">
+                          <ShieldCheck className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <span className="font-bold text-sm">Two-Factor Authentication</span>
+                      </div>
+                      <div className="w-10 h-5 bg-blue-600 rounded-full relative">
+                        <div className="absolute top-1 right-1 w-3 h-3 bg-white rounded-full"></div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800 shadow-sm">
+                  <h4 className="text-lg font-black tracking-tight mb-6">Preferences</h4>
+                  <div className="space-y-4">
+                    <button 
+                      onClick={() => setDark(!dark)}
+                      className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-all border border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-slate-100 dark:bg-zinc-800 rounded-lg">
+                          {dark ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-slate-600" />}
+                        </div>
+                        <span className="font-bold text-sm">Appearance</span>
+                      </div>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">{dark ? 'Dark Mode' : 'Light Mode'}</span>
+                    </button>
+                    <div className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-all border border-transparent hover:border-gray-200 dark:hover:border-zinc-700">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-indigo-50 dark:bg-indigo-900/10 rounded-lg">
+                          <Bell className="w-4 h-4 text-indigo-600" />
+                        </div>
+                        <span className="font-bold text-sm">Notifications</span>
+                      </div>
+                      <div className="w-10 h-5 bg-gray-200 dark:bg-zinc-700 rounded-full relative">
+                        <div className="absolute top-1 left-1 w-3 h-3 bg-white rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-rose-50 dark:bg-rose-900/10 p-8 rounded-[2.5rem] border border-rose-100 dark:border-rose-900/20 shadow-sm">
+                  <h4 className="text-lg font-black tracking-tight text-rose-600 mb-6">Danger Zone</h4>
+                  <div className="space-y-4">
+                    <button 
+                      onClick={onLogout}
+                      className="w-full p-4 flex items-center gap-3 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-900/20 rounded-2xl transition-all font-black text-xs uppercase tracking-widest"
+                    >
+                      <LogOut className="w-4 h-4" /> Sign Out from Device
+                    </button>
+                    <button className="w-full p-4 flex items-center gap-3 text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/20 rounded-2xl transition-all font-black text-xs uppercase tracking-widest opacity-50 cursor-not-allowed">
+                      <Trash2 className="w-4 h-4" /> Deactivate Account
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        )}
+
         {navView === 'home' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -7586,17 +7733,17 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/10 border border-blue-100 dark:border-blue-800/30 rounded-2xl p-3 flex items-center justify-between overflow-hidden relative group shadow-sm"
+              className="bg-purple-50 dark:bg-purple-200 border-2 border-purple-100 dark:border-purple-300 rounded-2xl p-3 flex items-center justify-between overflow-hidden relative group shadow-sm min-h-[60px]"
             >
               <div className="flex items-center gap-3 relative z-10">
-                <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                <div className="w-9 h-9 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-600/20">
                   <Zap className="w-4 h-4 animate-pulse" />
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.2em]">Sponsored Ad</span>
-                    <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
-                    <span className="text-[7px] font-bold text-gray-400 uppercase tracking-widest">SageVault Partners</span>
+                    <span className="text-[8px] font-black text-zinc-950 dark:text-zinc-950 uppercase tracking-[0.2em]">Sponsored Ad</span>
+                    <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+                    <span className="text-[7px] font-black text-zinc-950 dark:text-zinc-950 uppercase tracking-widest">SageVault Partners</span>
                   </div>
                   <AnimatePresence mode="wait">
                     <motion.p
@@ -7604,7 +7751,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
-                      className="text-sm font-black tracking-tight text-zinc-900 dark:text-zinc-100"
+                      className="text-sm font-black tracking-tight text-zinc-950 dark:text-zinc-950"
                     >
                       {ads[adIndex]}
                     </motion.p>
@@ -7613,14 +7760,14 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
               </div>
               
               {/* Animated Background Elements */}
-              <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-blue-600/5 to-transparent pointer-events-none"></div>
+              <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-purple-600/5 to-transparent pointer-events-none"></div>
               <motion.div 
                 animate={{ 
                   scale: [1, 1.2, 1],
                   opacity: [0.3, 0.5, 0.3]
                 }}
                 transition={{ duration: 4, repeat: Infinity }}
-                className="absolute -right-8 -top-8 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"
+                className="absolute -right-8 -top-8 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"
               />
             </motion.div>
 
@@ -7628,28 +7775,28 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             <motion.div 
               whileHover={{ scale: 1.01, y: -2 }}
               whileTap={{ scale: 0.99 }}
-              className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-blue-600/20"
+              className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-blue-600/40"
             >
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-10">
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-1">Total Balance</p>
-                    <h3 className="text-4xl sm:text-5xl font-black tracking-tighter">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white mb-1">Total Balance</p>
+                    <h3 className="text-4xl sm:text-5xl font-bold tracking-tighter text-white">
                       {symbol}{convert(user.balance)}
                     </h3>
                   </div>
-                  <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10">
-                    <Wallet className="w-6 h-6" />
+                  <div className="bg-white/20 backdrop-blur-md p-3 rounded-2xl border border-white/20 shadow-inner">
+                    <Wallet className="w-6 h-6 text-white" />
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-6 border-t border-white/10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-6 border-t border-white/20">
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Account Details</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Account Details</p>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
-                        <span className="text-xl font-mono font-bold tracking-wider">{user.accountNumber}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">{user.name}</span>
+                        <span className="text-xl font-mono font-bold tracking-wider text-white">{user.accountNumber}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white">{user.name}</span>
                       </div>
                       <button 
                         onClick={(e) => {
@@ -7657,9 +7804,9 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                           navigator.clipboard.writeText(user.accountNumber);
                           showToast('Account number copied!');
                         }}
-                        className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
+                        className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors border border-white/10"
                       >
-                        <Copy className="w-4 h-4" />
+                        <Copy className="w-4 h-4 text-white" />
                       </button>
                     </div>
                   </div>
@@ -7711,23 +7858,23 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                   <div className={`w-14 h-14 ${action.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
                     {action.icon}
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-zinc-400 group-hover:text-black dark:group-hover:text-white transition-colors">{action.label}</span>
+                  <span className="text-[11px] font-black uppercase tracking-widest text-indigo-900 dark:text-sky-400 group-hover:text-blue-600 dark:group-hover:text-white transition-colors">{action.label}</span>
                 </motion.button>
               ))}
             </div>
 
             {/* Recent Transactions Section */}
-            <div className="space-y-6 relative bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800 shadow-sm">
+            <div className="space-y-6 relative bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border-2 border-slate-100 dark:border-blue-500/30 shadow-sm">
               <div className="flex justify-between items-center px-1">
                 <div>
-                  <h3 className="font-black text-xl tracking-tight">Recent Transactions</h3>
-                  <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-400 uppercase tracking-widest">Your latest activity</p>
+                  <h3 className="font-black text-2xl tracking-tight text-white">Recent Transactions</h3>
+                  <p className="text-[11px] font-black text-sky-400 uppercase tracking-[0.2em]">Your latest activity</p>
                 </div>
                 <motion.button 
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setNavView('transactions')}
-                  className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-xl transition-all"
+                  className="text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase tracking-widest hover:underline bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-xl transition-all"
                 >
                   See All
                 </motion.button>
@@ -7764,25 +7911,25 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             </div>
 
             {/* Post Testimony Form (Moved Up) */}
-            <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800 shadow-sm relative overflow-hidden group">
+            <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border-2 border-slate-100 dark:border-blue-500/30 shadow-sm relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full -ml-16 -mt-16 group-hover:bg-purple-500/10 transition-all"></div>
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-xl flex items-center justify-center">
                     <Heart className="w-5 h-5 text-purple-600" />
                   </div>
-                  <h4 className="font-black text-lg tracking-tight">Share Your Experience</h4>
+                  <h4 className="font-black text-xl tracking-tight text-zinc-800 dark:text-white">Share Your Experience</h4>
                 </div>
                 <form onSubmit={handlePostTestimony} className="space-y-4">
                   <textarea 
                     value={newTestimony}
                     onChange={e => setNewTestimony(e.target.value)}
                     placeholder="How has SageVault helped you today?"
-                    className="w-full p-5 bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500 text-sm min-h-[120px] resize-none transition-all font-medium text-zinc-900 dark:text-zinc-100"
+                    className="w-full p-5 bg-white border-2 border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500 text-sm min-h-[120px] resize-none transition-all font-bold text-black dark:text-black"
                     required
                   />
                   <div className="flex justify-between items-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Your feedback helps us grow</p>
+                    <p className="text-[10px] font-black text-sky-400 uppercase tracking-widest">Your feedback helps us grow</p>
                     <motion.button 
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
@@ -7802,18 +7949,18 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             </div>
 
             {/* Testimonials (Moved Down) */}
-            <div className="space-y-6 relative bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800 shadow-sm">
+            <div className="space-y-6 relative bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border-2 border-slate-100 dark:border-blue-500/30 shadow-sm">
               <div className="flex justify-between items-center px-1">
                 <div>
-                  <h3 className="font-black text-xl tracking-tight">Community Voices</h3>
-                  <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-400 uppercase tracking-widest">Real stories from real users</p>
+                  <h3 className="font-black text-2xl tracking-tight text-white">Community Voices</h3>
+                  <p className="text-[10px] font-black text-sky-400 uppercase tracking-[0.2em]">Real stories from real users</p>
                 </div>
                 {testimonials.length > 0 && (
                   <motion.button 
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowAllTestimonials(true)}
-                    className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-xl transition-all"
+                    className="text-[10px] font-black text-blue-700 dark:text-blue-400 uppercase tracking-widest hover:underline bg-blue-100 dark:bg-blue-900/20 px-4 py-2 rounded-xl transition-all"
                   >
                     See All ({testimonials.length})
                   </motion.button>
@@ -7823,8 +7970,8 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {testimonials.length === 0 ? (
                   <div className="col-span-full py-12 text-center">
-                    <MessageSquare className="w-12 h-12 text-gray-200 dark:text-zinc-800 mx-auto mb-4" />
-                    <p className="text-gray-400 dark:text-zinc-500 font-bold uppercase tracking-widest text-xs">Be the first to share your experience!</p>
+                    <MessageSquare className="w-12 h-12 text-gray-400 dark:text-zinc-800 mx-auto mb-4" />
+                    <p className="text-gray-600 dark:text-zinc-500 font-black uppercase tracking-widest text-xs">Be the first to share your experience!</p>
                   </div>
                 ) : (
                   (testimonials || []).slice(0, 3).map((t) => (
@@ -7832,21 +7979,21 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       key={t.id} 
-                      className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-[2rem] border border-gray-100 dark:border-zinc-700/50 shadow-sm flex flex-col justify-between h-full group hover:shadow-md transition-all"
+                      className="bg-white dark:bg-zinc-800/50 p-6 rounded-[2rem] border-2 border-gray-100 dark:border-zinc-700/50 shadow-sm flex flex-col justify-between h-full group hover:shadow-md transition-all"
                     >
                       <div>
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-xs">
+                            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-black text-xs">
                               {t.name.charAt(0)}
                             </div>
-                            <h4 className="font-bold text-sm">{t.name}</h4>
+                            <h4 className="font-black text-sm text-white">{t.name}</h4>
                           </div>
-                          <Quote className="w-5 h-5 text-purple-200 dark:text-purple-900/40" />
+                          <Quote className="w-5 h-5 text-purple-400 dark:text-purple-900/40" />
                         </div>
-                        <p className="text-gray-500 dark:text-zinc-400 text-sm leading-relaxed italic line-clamp-4">"{t.text}"</p>
+                        <p className="text-white text-sm font-black leading-relaxed italic line-clamp-4">"{t.text}"</p>
                       </div>
-                      <p className="text-[10px] text-gray-400 dark:text-zinc-500 font-bold mt-6 uppercase tracking-widest">
+                      <p className="text-[10px] text-sky-400 font-black mt-6 uppercase tracking-widest">
                         {t.createdAt ? (t.createdAt.toDate ? t.createdAt.toDate().toLocaleDateString() : new Date(t.createdAt).toLocaleDateString()) : 'Just now'}
                       </p>
                     </motion.div>
@@ -7859,12 +8006,12 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
             <div className="mt-12 pt-8 border-t border-gray-200 dark:border-zinc-800 text-center space-y-4">
               <div className="flex justify-center items-center gap-3 opacity-50 grayscale hover:grayscale-0 transition-all">
                 <ShieldCheck className="w-8 h-8 text-emerald-600" />
-                <div className="text-left">
+                <div className="text-left text-black dark:text-white">
                   <p className="text-[10px] font-black uppercase tracking-tighter leading-none">Licensed by the</p>
                   <p className="text-sm font-black uppercase tracking-tight">Central Bank of Nigeria</p>
                 </div>
               </div>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">
+              <p className="text-[10px] text-black dark:text-zinc-500 font-bold uppercase tracking-[0.2em]">
                 SageVault Fintech Ltd © 2026 • RC: 1234567
               </p>
             </div>
@@ -8057,6 +8204,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 {[
                   { label: 'Saved Beneficiaries', icon: <Users />, count: 12, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20', action: () => {} },
                   { label: 'Scheduled Payments', icon: <Calendar />, count: recurringPayments.length, color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-900/20', action: () => setRecurringPaymentsModalOpen(true) },
+                  { label: 'Settings', icon: <Settings />, color: 'text-zinc-500', bg: 'bg-zinc-50 dark:bg-zinc-800', action: () => setNavView('settings') },
                 ].map((item, i) => (
                   <motion.button 
                     key={i}
@@ -8180,7 +8328,7 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-gray-50 dark:border-zinc-800 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
-                  <p className="text-xs text-gray-400 dark:text-zinc-400 font-medium text-center sm:text-left">
+                  <p className="text-xs text-indigo-900 dark:text-sky-400 font-black text-center sm:text-left">
                     Upgrade your tier to increase your transaction limits and unlock more features.
                   </p>
                   <motion.button 
@@ -8267,15 +8415,15 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
                 <div className="w-12 h-12 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Users className="w-6 h-6" />
                 </div>
-                <p className="text-3xl font-black">{user.referralsCount}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1">Invited Friends</p>
+                <p className="text-3xl font-black text-slate-950 dark:text-white">{user.referralsCount}</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-indigo-900 dark:text-zinc-500 mt-1">Invited Friends</p>
               </div>
               <div className="bg-white dark:bg-zinc-900 p-8 rounded-[3rem] border border-gray-100 dark:border-zinc-800 shadow-sm text-center">
                 <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-6 h-6" />
                 </div>
-                <p className="text-3xl font-black">{symbol}{convert(user.referralsCount! * 500)}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1">Total Earned</p>
+                <p className="text-3xl font-black text-slate-950 dark:text-white">{symbol}{convert(user.referralsCount! * 500)}</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-indigo-900 dark:text-zinc-500 mt-1">Total Earned</p>
               </div>
             </div>
 
@@ -8366,6 +8514,9 @@ function Dashboard({ user, transactions, onLogout, onUpdateUser, dark, setDark, 
   );
 }
 
+// #endregion
+
+// #region 5. MODALS & SCREENS
 function PinResetModal({ 
   isOpen, 
   onClose, 
@@ -8577,11 +8728,22 @@ function TransactionSuccessScreen({
   onClose: () => void,
   showToast: (m: string, t?: 'success' | 'error') => void
 }) {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const txDate = (() => {
+    try {
+      let d;
+      if (!transaction.createdAt && !transaction.date) d = new Date();
+      else if (transaction.createdAt?.toDate) d = transaction.createdAt.toDate();
+      else if (transaction.createdAt?.seconds) d = new Date(transaction.createdAt.seconds * 1000);
+      else if (transaction.createdAt) d = new Date(transaction.createdAt);
+      else if (transaction.date && transaction.date !== 'Just now') d = new Date(transaction.date);
+      else d = new Date();
+      
+      if (isNaN(d.getTime())) return new Date();
+      return d;
+    } catch (e) {
+      return new Date();
+    }
+  })();
 
   return (
     <motion.div 
@@ -8590,107 +8752,96 @@ function TransactionSuccessScreen({
       className="space-y-8 py-4"
     >
       <div className="text-center space-y-4">
-        <motion.div 
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", damping: 12, stiffness: 200 }}
-          className="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center text-emerald-600 mx-auto shadow-inner"
-        >
-          <CheckCircle2 className="w-12 h-12" />
-        </motion.div>
-        <div>
-          <h4 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white">Success!</h4>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">Transaction processed successfully</p>
-        </div>
+          <motion.div 
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", damping: 12, stiffness: 200 }}
+            className="w-24 h-24 bg-emerald-50 dark:bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-500 mx-auto shadow-inner border-4 border-emerald-500/50"
+          >
+            <CheckCircle2 className="w-12 h-12" />
+          </motion.div>
+          <div>
+            <h4 className="text-4xl font-black tracking-tight text-white">Success!</h4>
+            <p className="text-xs font-black text-emerald-400 uppercase tracking-[0.2em] mt-2">Transaction processed successfully</p>
+          </div>
       </div>
 
-      <div className="bg-gray-50 dark:bg-zinc-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-700 space-y-6 shadow-sm">
-        <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Amount</span>
-          <span className="text-2xl font-black text-emerald-500">{symbol}{convert(transaction.amount)}</span>
-        </div>
-        
-        {(transaction.details?.accountName || transaction.receiverName) && (
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Recipient</span>
-            <span className="font-black text-sm text-zinc-900 dark:text-zinc-100">{transaction.details?.accountName || transaction.receiverName}</span>
-          </div>
-        )}
-
-        {(transaction.details?.bankName || transaction.bankName) && (
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Bank</span>
-            <span className="font-black text-sm text-zinc-900 dark:text-zinc-100">{transaction.details?.bankName || transaction.bankName}</span>
-          </div>
-        )}
+          <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border-2 border-gray-300 dark:border-blue-500/30 space-y-6 shadow-xl">
+            <div className="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-zinc-800">
+              <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Amount</span>
+              <span className="text-3xl font-black text-emerald-700 dark:text-emerald-500">{symbol}{convert(transaction.amount)}</span>
+            </div>
+            
+            {(transaction.details?.accountName || transaction.receiverName) && (
+              <div className="flex justify-between items-center">
+                <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Recipient</span>
+                <span className="font-black text-base text-slate-950 dark:text-white">{transaction.details?.accountName || transaction.receiverName}</span>
+              </div>
+            )}
+    
+            {(transaction.details?.bankName || transaction.bankName) && (
+              <div className="flex justify-between items-center">
+                <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Bank</span>
+                <span className="font-black text-base text-slate-950 dark:text-white">{transaction.details?.bankName || transaction.bankName}</span>
+              </div>
+            )}
 
         {transaction.details?.phoneNumber && (
           <div className="flex justify-between items-center">
-            <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Phone</span>
-            <span className="font-black text-sm text-zinc-900 dark:text-zinc-100">{transaction.details.phoneNumber}</span>
+            <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Phone</span>
+            <span className="font-bold text-base text-[#000000] dark:text-zinc-100">{transaction.details.phoneNumber}</span>
           </div>
         )}
 
         {transaction.details?.network && (
           <div className="flex justify-between items-center">
-            <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Network</span>
-            <span className="font-black text-sm text-zinc-900 dark:text-zinc-100">{transaction.details.network}</span>
+            <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Network</span>
+            <span className="font-bold text-base text-[#000000] dark:text-zinc-100">{transaction.details.network}</span>
           </div>
         )}
 
         {transaction.details?.billType && (
           <div className="flex justify-between items-center">
-            <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Bill Type</span>
-            <span className="font-black text-sm text-zinc-900 dark:text-zinc-100">{transaction.details.billType}</span>
+            <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Bill Type</span>
+            <span className="font-bold text-base text-[#000000] dark:text-zinc-100">{transaction.details.billType}</span>
           </div>
         )}
 
         {transaction.details?.customerRef && (
           <div className="flex justify-between items-center">
-            <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Customer Ref</span>
-            <span className="font-black text-sm text-zinc-900 dark:text-zinc-100">{transaction.details.customerRef}</span>
+            <span className="text-indigo-900 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Customer Ref</span>
+            <span className="font-bold text-base text-[#000000] dark:text-zinc-100">{transaction.details.customerRef}</span>
           </div>
         )}
 
         <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Type</span>
-          <span className="font-black text-sm uppercase tracking-widest text-zinc-900 dark:text-zinc-100">{transaction.type}</span>
+          <span className="text-[#374151] dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Type</span>
+          <span className="font-bold text-base uppercase tracking-widest text-[#000000] dark:text-white">{transaction.type}</span>
         </div>
         
         <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Status</span>
+          <span className="text-[#374151] dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Status</span>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            <span className="font-black text-sm uppercase tracking-widest text-emerald-500">Completed</span>
+            <div className="w-2.5 h-2.5 bg-[#059669] rounded-full animate-pulse"></div>
+            <span className="font-bold text-base uppercase tracking-widest text-[#059669] dark:text-emerald-500">Completed</span>
           </div>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Reference</span>
-          <span className="font-mono font-bold text-xs tracking-wider text-zinc-500">{transaction.ref || transaction.id?.slice(0, 12).toUpperCase()}</span>
+          <span className="text-[#374151] dark:text-sky-400 text-[11px] font-black uppercase tracking-widest">Reference</span>
+          <span className="font-mono font-bold text-sm tracking-wider text-[#000000] dark:text-white">{transaction.ref || transaction.id?.slice(0, 12).toUpperCase()}</span>
         </div>
         
         <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
-            <Calendar className="w-3 h-3" /> Date & Time
+          <span className="text-[#374151] dark:text-sky-400 text-[11px] font-black uppercase tracking-widest flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5" /> Date & Time
           </span>
           <div className="text-right">
-            <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 block">
-              {(() => {
-                try {
-                  const date = transaction.createdAt?.toDate 
-                    ? transaction.createdAt.toDate() 
-                    : (transaction.createdAt ? new Date(transaction.createdAt) : new Date());
-                  return isNaN(date.getTime()) 
-                    ? new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                    : date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-                } catch (e) {
-                  return new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-                }
-              })()}
+            <span className="font-bold text-base text-[#000000] dark:text-white block">
+              {txDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </span>
-            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            <span className="text-[11px] font-black text-blue-700 dark:text-blue-400 uppercase tracking-widest">
+              {txDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </span>
           </div>
         </div>
@@ -8739,6 +8890,9 @@ function TransactionSuccessScreen({
   );
 }
 
+// #endregion
+
+// #region 6. ROOT APP COMPONENT
 function App() {
   const [deviceId] = useState(() => {
     let id = localStorage.getItem('sagevault-device-id');
@@ -8990,6 +9144,17 @@ function App() {
       }
 
       if (authUser) {
+        // Handle Remember Me
+        if (remember && loginData.phone) {
+          localStorage.setItem('sagevault-remember-phone', loginData.phone);
+          if (loginData.password) {
+            localStorage.setItem('sagevault-remember-pass', loginData.password);
+          }
+        } else {
+          localStorage.removeItem('sagevault-remember-phone');
+          localStorage.removeItem('sagevault-remember-pass');
+        }
+
         const userRef = doc(db, 'users', authUser.uid);
         try {
           const docSnap = await withRetry(() => getDoc(userRef));
@@ -9061,7 +9226,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-    <div className={`${dark ? 'dark bg-zinc-950' : 'bg-slate-50'} min-h-screen transition-colors duration-500 text-slate-900 dark:text-white`}>
+    <div className={`${dark ? 'dark bg-zinc-950' : 'bg-black'} min-h-screen transition-colors duration-500 text-white`}>
       <GlobalErrorModal error={globalError} onClose={() => setGlobalError(null)} />
       <AnimatePresence mode="wait">
         {loading ? (

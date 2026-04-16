@@ -23,7 +23,7 @@ export const Logo: React.FC<LogoProps> = ({ className = '', size = 'md' }) => {
   };
 
   return (
-    <div className={`relative overflow-hidden flex items-center justify-center ${sizeClasses[size]} ${className}`}>
+    <div className={`relative overflow-hidden flex items-center justify-center border-2 border-black dark:border-white/20 ring-4 ring-black/5 ${sizeClasses[size]} ${className}`}>
       {!error ? (
         <img 
           src="/attachment/0" 
